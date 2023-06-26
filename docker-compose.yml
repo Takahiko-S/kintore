@@ -1,0 +1,36 @@
+version: "3"
+services:
+  db:
+    image: mariadb:10.11
+    container_name: "laravel-db"
+    volumes:
+      - ./data:/var/lib/mysql
+      - ./db/my.cnf:/etc/mysql/conf.d/my.cnf
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: webmaster
+      MYSQL_PASSWORD: sasa2308
+      TZ: 'Asia/Tokyo'
+    ports:
+      - "3306:3306"
+  php:
+    build: ./php
+    container_name: "laravel-php"
+    volumes:
+      - ./source:/var/www/html
+      - ./php/vhost.conf:/etc/apache2/conf-enabled/vhost.conf
+    ports:
+      - "8080:80"
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: "laravel-phpmyadmin"
+    environment:
+      PMA_HOST: db
+      PMA_USER: webmaster
+      PMA_PASSWORD: sasa2308
+    ports:
+      - "8081:80"
+    links:
+      - db
+

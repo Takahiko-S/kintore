@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('histories', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('exercise_id')->constrained()->cascadeOnDelete();
+            $table->date('date');
+            $table->integer('sets');
+            $table->integer('reps');
+            $table->integer('weight');
             $table->timestamps();
         });
     }

@@ -126,4 +126,7 @@ class HistoryController extends Controller
         return $calendar_array;
     }
     
+    public function top(){
+        return view('layouts.index');
+    }
 }

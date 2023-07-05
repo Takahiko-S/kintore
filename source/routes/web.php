@@ -16,8 +16,10 @@ use App\Http\Controllers\HistoryController;
 |
 */
 
-//Route::get('/', function () {return view('welcome');});
-Route::get('/', [HistoryController::class, 'index'])->middleware(['auth', 'verified'])->name('index');
+Route::get('/', [HistoryController::class, 'top']);
+
+Route::get('/index', [HistoryController::class, 'index'])->middleware(['auth', 'verified'])->name('index');
+
 
 Route::get('/dashboard', function () {return view('dashboard');})->middleware(['auth', 'verified'])->name('dashboard');
 

@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('menu_exercises', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('menu_id');
+            $table->unsignedBigInteger('menu_id');
             $table->foreign('menu_id')->references('id')->on('menus');
-            $table->unsignedInteger('exercise_id');
+            $table->unsignedBigInteger('exercise_id');
             $table->foreign('exercise_id')->references('id')->on('exercises');
             $table->integer('order');
             $table->integer('planned_sets');
+            $table->integer('weight')->nullable(); // 重量を表すカラムを追加
             $table->timestamps();
         });
     }

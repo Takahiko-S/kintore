@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('histories', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('user_id');
+            $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->unsignedInteger('menu_id');
+            $table->unsignedBigInteger('menu_id');
             $table->foreign('menu_id')->references('id')->on('menus');
             $table->date('exercise_date');
             $table->integer('exercise_id');

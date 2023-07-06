@@ -27,12 +27,12 @@
                 </div>
 
                 <div class="col-6 text-start">
-                    <a href="{{ route('index') }}?y={{ $prevYear }}&m={{ $prevMonth }}"
+                    <a href="{{ route('history') }}?y={{ $prevYear }}&m={{ $prevMonth }}"
                         class="btn btn-secondary btn-sm" id="befor">&lt;&lt;&nbsp;前の月</a>
                 </div>
 
                 <div class="col-6 text-end">
-                    <a href="{{ route('index') }}?y={{ $nextYear }}&m={{ $nextMonth }}"
+                    <a href="{{ route('history') }}?y={{ $nextYear }}&m={{ $nextMonth }}"
                         class="btn btn-secondary btn-sm" id="after">次の月&nbsp;&gt;&gt;</a>
                 </div>
 
@@ -51,7 +51,7 @@
                             @if ($index % 7 == 0)
                                 <tr>
                             @endif
-                            <td class="text-center table-danger">{{ $data['date'] }}</td>
+                            <td class="text-center table-strped">{{ $data['date'] }}</td>
                             @if ($index % 7 == 6)
                                 </tr>
                             @endif
@@ -68,7 +68,7 @@
 
 
                 <div class="col-10 mx-auto mt-5">
-                    <a href="" class="btn btn-primary btn-lg w-100 ">筋トレスケジュール</a>
+                    <a href="{{route('schedule')}}" class="btn btn-primary btn-lg w-100 ">筋トレスケジュール</a>
                 </div>
 
 

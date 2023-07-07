@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\TodayMenuController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +24,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/index', [HistoryController::class, 'index'])->name('history.index');
     Route::resource('history',HistoryController::class);
     Route::resource('schedule',ScheduleController::class);
-    Route::get('/todayMenu', [ScheduleController::class, 'todayMenu'])->name('todayMenu');
+    Route::resource('today',TodayMenuController::class);
+  
+   
+    
 });
 
 //Route::get('/dashboard', function () {return view('dashboard');})->middleware(['auth', 'verified'])->name('dashboard');

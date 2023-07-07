@@ -11,36 +11,35 @@
         <div class="container">
             <h2 class="mt-4">筋トレスケジュール</h2>
 
-             <form action="{{ route('schedule.store') }}" method="POST" class="mt-4">
-            @csrf
-
-            @for ($menuIndex = 1; $menuIndex <= 7; $menuIndex++)
-                <h4 class="mt-3">メニュー {{ $menuIndex }}</h4>
-                @for ($workoutIndex = 1; $workoutIndex <= 15; $workoutIndex++)
-                    <div class="mb-3">
-                        <label for="menu-{{ $menuIndex }}-workout-{{ $workoutIndex }}" class="form-label">種目 {{ $workoutIndex }}</label>
-                        <div class="row">
-                            <div class="col-6">
-                                <input type="text" style="width: 100%;" id="menu-{{ $menuIndex }}-workout-{{ $workoutIndex }}" name="menus[{{ $menuIndex }}][exercises][{{ $workoutIndex }}][name]" placeholder="種目名を入力">
-                            </div>
-                            <div class="col-3">
-                                <input type="text" style="width: 100%;" id="menu-{{ $menuIndex }}-workout-{{ $workoutIndex }}-weight" name="menus[{{ $menuIndex }}][exercises][{{ $workoutIndex }}][weight]" placeholder="重量を入力">
-                            </div>
-                            <div class="col-3">
-                                <input type="text" style="width: 100%;" id="menu-{{ $menuIndex }}-workout-{{ $workoutIndex }}-reps" name="menus[{{ $menuIndex }}][exercises][{{ $workoutIndex }}][reps]" placeholder="回数を入力">
-                            </div>
-                        </div>
+            @foreach ($menus as $menuIndex => $menu)
+                 <h4 class="mt-3">メニュー {{ $menuIndex + 1 }}</h4>
+    @if ($menu->menuExercises)
+        @foreach ($menu->menuExercises as $workoutIndex => $menuExercise)
+            <div class="mb-3">
+                <label for="menu-{{ $menuIndex + 1 }}-workout-{{ $workoutIndex + 1 }}" class="form-label">種目 {{ $workoutIndex + 1 }}</label>
+                <div class="row">
+                    <div class="col-6">
+                        <input type="text" style="width: 100%;" id="menu-{{ $menuIndex + 1 }}-workout-{{ $workoutIndex + 1 }}" value="{{ $menuExercise->exercise->name }}" disabled>
                     </div>
-                @endfor
-            @endfor
-
-            <button type="submit" class="btn btn-primary">スケジュールを保存</button>
-        </form>
+                    <div class="col-3">
+                        <input type="text" style="width: 100%;" id="menu-{{ $menuIndex + 1 }}-workout-{{ $workoutIndex + 1 }}-weight" value="{{ $menuExercise->weight }}" disabled>
+                    </div>
+                    <div class="col-3">
+                        <input type="text" style="width: 100%;" id="menu-{{ $menuIndex + 1 }}-workout-{{ $workoutIndex + 1 }}-reps" value="{{ $menuExercise->planned_sets }}" disabled>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+         @else
+        <p>このメニューには内容が登録されていません。</p>
+    @endif
+            @endforeach
         </div>
     </x-slot>
+
     <x-slot name="script">
-    <script></script>
-    
+        <script></script>
     </x-slot>
 </x-base-layout>
+
 

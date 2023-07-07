@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Schedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Menus;
 use App\Models\Exercises;
 use App\Models\Menu;
+
 
 class ScheduleController extends Controller
 {
@@ -16,7 +16,8 @@ class ScheduleController extends Controller
      */
     public function index()
     {
-        return view('contents.schedule');
+        $menus = Menu::all();
+        return view('contents.schedule',compact('menus'));
     }
 
     /**
@@ -83,13 +84,6 @@ class ScheduleController extends Controller
     {
         //
     }
-    public function todayMenu()
-    {
-        // 最新のメニューを取得します
-        $menu = Menu::with('menuExercises.exercise')->orderBy('id', 'desc')->first();
-        
-        // ビューにデータを渡して表示
-        return view('contents.today_menu', compact('menu'));
-    }
+  
     
 }

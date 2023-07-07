@@ -21,6 +21,9 @@
             </div>
         @endforeach
     </div>
+      <div class="col-10 mx-auto mt-5">
+                    <a href="{{route('today.edit', ['today' => $menu->id])}}" class="btn btn-primary btn-lg w-100">種目の変更</a>
+                </div>
 </x-slot>
 
         <x-slot name="script"></x-slot>

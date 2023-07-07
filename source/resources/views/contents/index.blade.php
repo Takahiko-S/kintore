@@ -63,7 +63,7 @@
             <div class="row">
 
                 <div class="col-10 mx-auto mt-5">
-                    <a href="{{route('todayMenu')}}"class="btn btn-danger btn-lg w-100 ">今日のメニュー</a>
+                    <a href="{{route('today.index')}}"class="btn btn-danger btn-lg w-100 ">今日のメニュー</a>
                 </div>
 
 

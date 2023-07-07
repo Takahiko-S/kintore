@@ -7,5 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class MenuExercise extends Model
 {
-    use HasFactory;
+  
+    public function exercise()
+    {
+        return $this->belongsTo(Exercises::class, 'exercise_id');
+    }
+    
 }

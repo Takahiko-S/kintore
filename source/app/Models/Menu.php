@@ -7,5 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Menu extends Model
 {
-    use HasFactory;
+  
+    public function menuExercises()
+    {
+        return $this->hasMany(MenuExercise::class, 'menu_id');
+    }
 }

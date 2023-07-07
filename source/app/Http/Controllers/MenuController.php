@@ -36,8 +36,9 @@ class MenuController extends Controller
      */
     public function show(Menu $menu)
     {
-        //
+   
     }
+    
 
     /**
      * Show the form for editing the specified resource.

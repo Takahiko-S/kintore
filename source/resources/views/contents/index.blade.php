@@ -27,12 +27,12 @@
                 </div>
 
                 <div class="col-6 text-start">
-                    <a href="{{ route('history') }}?y={{ $prevYear }}&m={{ $prevMonth }}"
+                    <a href="{{ route('history.index') }}?y={{ $prevYear }}&m={{ $prevMonth }}"
                         class="btn btn-secondary btn-sm" id="befor">&lt;&lt;&nbsp;前の月</a>
                 </div>
 
                 <div class="col-6 text-end">
-                    <a href="{{ route('history') }}?y={{ $nextYear }}&m={{ $nextMonth }}"
+                    <a href="{{ route('history.index') }}?y={{ $nextYear }}&m={{ $nextMonth }}"
                         class="btn btn-secondary btn-sm" id="after">次の月&nbsp;&gt;&gt;</a>
                 </div>
 
@@ -63,12 +63,12 @@
             <div class="row">
 
                 <div class="col-10 mx-auto mt-5">
-                    <a href="" class="btn btn-danger btn-lg w-100 ">今日のメニュー</a>
+                    <a href="{{route('today.index')}}"class="btn btn-danger btn-lg w-100 ">今日のメニュー</a>
                 </div>
 
 
                 <div class="col-10 mx-auto mt-5">
-                    <a href="{{route('schedule')}}" class="btn btn-primary btn-lg w-100 ">筋トレスケジュール</a>
+                    <a href="{{route('schedule.index')}}" class="btn btn-primary btn-lg w-100 ">筋トレスケジュール</a>
                 </div>
 
 

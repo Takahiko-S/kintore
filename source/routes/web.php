@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\TodayMenuController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,12 +18,16 @@ use App\Http\Controllers\ScheduleController;
 |
 */
 
-Route::get('/', [HistoryController::class, 'top']);
+Route::get('/', [HistoryController::class, 'top'])->name('history.top');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/history', [HistoryController::class, 'index'])->name('history');
-    Route::get('/schedule', [ScheduleController::class, 'index'])->name('schedule');
+    Route::get('/index', [HistoryController::class, 'index'])->name('history.index');
+    Route::resource('history',HistoryController::class);
     Route::resource('schedule',ScheduleController::class);
+    Route::resource('today',TodayMenuController::class);
+  
+   
+    
 });
 
 //Route::get('/dashboard', function () {return view('dashboard');})->middleware(['auth', 'verified'])->name('dashboard');

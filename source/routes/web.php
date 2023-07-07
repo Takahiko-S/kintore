@@ -17,12 +17,13 @@ use App\Http\Controllers\ScheduleController;
 |
 */
 
-Route::get('/', [HistoryController::class, 'top']);
+Route::get('/', [HistoryController::class, 'top'])->name('history.top');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/history', [HistoryController::class, 'index'])->name('history');
-    Route::get('/schedule', [ScheduleController::class, 'index'])->name('schedule');
+    Route::get('/index', [HistoryController::class, 'index'])->name('history.index');
+    Route::resource('history',HistoryController::class);
     Route::resource('schedule',ScheduleController::class);
+    Route::get('/todayMenu', [ScheduleController::class, 'todayMenu'])->name('todayMenu');
 });
 
 //Route::get('/dashboard', function () {return view('dashboard');})->middleware(['auth', 'verified'])->name('dashboard');

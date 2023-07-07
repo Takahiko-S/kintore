@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Menus;
 use App\Models\Exercises;
+use App\Models\Menu;
 
 class ScheduleController extends Controller
 {
@@ -32,7 +33,7 @@ class ScheduleController extends Controller
     public function store(Request $request)
     {
         foreach ($validatedData['menus'] as $menuIndex => $menuData) {
-            $menu = new Menus();
+            $menu = new Menu();
             $menu->user_id = Auth::user()->id; // もしユーザー認証が必要な場合は適切な方法でユーザーIDを取得する
             $menu->name = 'メニュー ' . ($menuIndex + 1);
             $menu->save();
@@ -82,4 +83,13 @@ class ScheduleController extends Controller
     {
         //
     }
+    public function todayMenu()
+    {
+        // 最新のメニューを取得します
+        $menu = Menu::with('menuExercises.exercise')->orderBy('id', 'desc')->first();
+        
+        // ビューにデータを渡して表示
+        return view('contents.today_menu', compact('menu'));
+    }
+    
 }

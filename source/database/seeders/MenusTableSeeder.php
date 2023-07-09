@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Menu;
 
+
 class MenusTableSeeder extends Seeder
 {
     /**
@@ -27,7 +28,7 @@ class MenusTableSeeder extends Seeder
             ],
             // 追加のメニューデータをここに追記
         ];
-        
+
         // メニューデータをデータベースに挿入
         foreach ($menus as $menuData) {
             Menu::create($menuData);

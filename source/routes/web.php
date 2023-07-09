@@ -22,12 +22,11 @@ Route::get('/', [HistoryController::class, 'top'])->name('history.top');
 
 Route::middleware('auth')->group(function () {
     Route::get('/index', [HistoryController::class, 'index'])->name('history.index');
-    Route::resource('history',HistoryController::class);
-    Route::resource('schedule',ScheduleController::class);
-    Route::resource('today',TodayMenuController::class);
-  
-   
-    
+    Route::resource('history', HistoryController::class);
+    Route::resource('schedule', ScheduleController::class);
+    Route::resource('today', TodayMenuController::class);
+
+    Route::delete('/today_destroy/{id}', [TodayMenuController::class, 'MenuExercisedestroy'])->name('today_destroy');
 });
 
 //Route::get('/dashboard', function () {return view('dashboard');})->middleware(['auth', 'verified'])->name('dashboard');

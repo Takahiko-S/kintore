@@ -17,7 +17,8 @@ class ScheduleController extends Controller
     public function index()
     {
         $menus = Menu::all();
-        return view('contents.schedule',compact('menus'));
+        //dd($menus);
+        return view('contents.schedule', compact('menus'));
     }
 
     /**
@@ -38,20 +39,20 @@ class ScheduleController extends Controller
             $menu->user_id = Auth::user()->id; // もしユーザー認証が必要な場合は適切な方法でユーザーIDを取得する
             $menu->name = 'メニュー ' . ($menuIndex + 1);
             $menu->save();
-            
+
             // メニューに関連する種目を保存する
             foreach ($menuData as $exerciseName) {
                 $exercise = Exercises::firstOrCreate(['name' => $exerciseName]);
                 $menu->exercises()->attach($exercise->id);
             }
         }
-        
+
         // 成功した場合はリダイレクトやレスポンスを返すなどの処理を行う
-        
+
         // 例: リダイレクト
         return redirect()->route('schedule.index')->with('success', 'スケジュールが保存されました。');
     }
-    
+
 
     /**
      * Display the specified resource.
@@ -84,6 +85,4 @@ class ScheduleController extends Controller
     {
         //
     }
-  
-    
 }

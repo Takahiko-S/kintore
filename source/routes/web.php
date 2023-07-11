@@ -23,10 +23,13 @@ Route::get('/', [HistoryController::class, 'top'])->name('history.top');
 Route::middleware('auth')->group(function () {
     Route::get('/index', [HistoryController::class, 'index'])->name('history.index');
     Route::resource('history', HistoryController::class);
-    Route::resource('schedule', ScheduleController::class);
     Route::resource('today', TodayMenuController::class);
-
     Route::delete('/today_destroy/{id}', [TodayMenuController::class, 'MenuExercisedestroy'])->name('today_destroy');
+
+    Route::get('/schedule', [ScheduleController::class, 'schedule_index'])->name('schedule.index');
+    Route::post('/schedule', [ScheduleController::class, 'schedule_store'])->name('schedule.store');
+    Route::get('/schedule/{id}/edit', [ScheduleController::class, 'schedule_edit'])->name('schedule.edit');
+    Route::patch('/schedule/{id}', [ScheduleController::class, 'schedule_update'])->name('schedule.update');
 });
 
 //Route::get('/dashboard', function () {return view('dashboard');})->middleware(['auth', 'verified'])->name('dashboard');

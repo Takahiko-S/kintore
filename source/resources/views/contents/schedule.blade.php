@@ -12,7 +12,8 @@
             <h2 class="mt-4">筋トレスケジュール</h2>
 
             @foreach ($menus as $menuIndex => $menu)
-                <h4 class="mt-3">メニュー {{ $menuIndex + 1 }}</h4>
+                <h4 class="mt-3">{{ $menu->name }}</h4>
+                <a href="{{ route('schedule.edit', $menu->id) }}" class="btn btn-primary">編集</a>
                 @if ($menu->menuExercises)
                     @foreach ($menu->menuExercises as $workoutIndex => $menuExercise)
                         <div class="mb-3">

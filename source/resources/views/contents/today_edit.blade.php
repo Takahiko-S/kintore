@@ -88,6 +88,7 @@
                     ).val(''); // Reset set and weight inputs
 
                     newRow.insertAfter(row); // Insert new row after the current one
+                    console.log(newRow);
                 });
             });
         </script>

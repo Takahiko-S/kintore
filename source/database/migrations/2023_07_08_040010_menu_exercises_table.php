@@ -18,8 +18,8 @@ return new class extends Migration
             $table->unsignedBigInteger('exercise_id');
             $table->foreign('exercise_id')->references('id')->on('exercises');
             $table->integer('order');
-            $table->integer('planned_sets');
-            $table->integer('weight')->nullable(); // 重量を表すカラムを追加
+            $table->integer('weight')->nullable();
+            $table->integer('reps')->nullable();
             $table->timestamps();
         });
     }

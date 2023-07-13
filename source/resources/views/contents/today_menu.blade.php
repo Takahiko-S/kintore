@@ -17,11 +17,11 @@
             @foreach ($menu->menuExercises as $menuExercise)
                 <div style="background-color: {{ $loop->iteration % 2 == 0 ? '#f8f9fa' : '#e9ecef' }};">
                     <h3>{{ $menuExercise->exercise->name }}</h3>
-                    <p>{{ $menuExercise->planned_sets }} sets - {{ $menuExercise->weight }} kg</p>
+                    <p>{{ $menuExercise->reps }} sets - {{ $menuExercise->weight }} kg</p>
                 </div>
             @endforeach
             <div class="col-10 mx-auto mt-5 ">
-                <a href="{{ route('today.edit', ['today' => $menu->id]) }}" class="btn btn-primary btn-lg w-100">種目の変更</a>
+                <a href="{{ route('today_edit', ['id' => $menu->id]) }}" class="btn btn-primary btn-lg w-100">種目の変更</a>
             </div>
         </div>
     </x-slot>

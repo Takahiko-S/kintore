@@ -14,33 +14,33 @@ class HistoryController extends Controller
     {
         $month = $request->input('m') ? intval($request->input('m')) : intval(date('m'));
         $year = $request->input('y') ? intval($request->input('y')) : intval(date('Y'));
-        
+
         // 前の月と次の月を計算
         $prevMonth = $month - 1;
         $nextMonth = $month + 1;
         $prevYear = $year;
         $nextYear = $year;
-        
+
         if ($prevMonth < 1) {
             $prevMonth = 12;
             $prevYear = $year - 1;
         }
-        
+
         if ($nextMonth > 12) {
             $nextMonth = 1;
             $nextYear = $year + 1;
         }
-        
+
         $calendar_data = $this->makeCalendarData($year, $month);
-        
+
         foreach ($calendar_data as &$data) {
             $d = explode('-', $data['date']);
             $data['date'] = intval($d[2]);
         }
-        
+
         return view('contents.index', compact('calendar_data', 'year', 'month', 'prevMonth', 'nextMonth', 'prevYear', 'nextYear'));
     }
-    
+
     /**
      * Show the form for creating a new resource.
      */
@@ -88,45 +88,46 @@ class HistoryController extends Controller
     {
         //
     }
-    
-    private function makeCalendarData($year,$month){
-        $youbi = array('日','月','火','水','木','金','土',);
+
+    private function makeCalendarData($year, $month)
+    {
+        $youbi = array('日', '月', '火', '水', '木', '金', '土',);
         $calendar_array = array();
         //print $month . "<br>";
         // $year = date('Y');
         //print $year . "<br>";
-        $date = new \DateTime($year."-" . $month . "-1");
-        
+        $date = new \DateTime($year . "-" . $month . "-1");
+
         $start = $date->format('w');
-        $num= -$start . " day";
-        if($start != 0){
+        $num = -$start . " day";
+        if ($start != 0) {
             $date->modify($num);
         }
-        
-        for($i = $start; $i > 0; $i--){
+
+        for ($i = $start; $i > 0; $i--) {
             //print $date->format('Y-m-d') . $youbi[$date->format('w')] . "<br>";
-            
-            array_push($calendar_array,array('date' =>$date->format('Y-m-d'),'week' =>$youbi[$date->format('w')]));
+
+            array_push($calendar_array, array('date' => $date->format('Y-m-d'), 'week' => $youbi[$date->format('w')]));
             $date->modify('+1 day');
         }
-        
-        while($date->format('m') == $month){
+
+        while ($date->format('m') == $month) {
             //print $date->format('Y-m-d') . $youbi[$date->format('w')] . "<br>";
-            array_push($calendar_array,array('date' =>$date->format('Y-m-d'),'week' =>$youbi[$date->format('w')]));
+            array_push($calendar_array, array('date' => $date->format('Y-m-d'), 'week' => $youbi[$date->format('w')]));
             $date->modify('+1 day');
-            
         }
-        while($date->format('w') != 0){//0になるまで回す一週間区切り
+        while ($date->format('w') != 0) { //0になるまで回す一週間区切り
             // print $date->format('Y-m-d') . $youbi[$date->format('w')] . "<br>";
-            array_push($calendar_array,array('date' =>$date->format('Y-m-d'),'week' =>$youbi[$date->format('w')]));
+            array_push($calendar_array, array('date' => $date->format('Y-m-d'), 'week' => $youbi[$date->format('w')]));
             $date->modify('+1 day');
         }
         //print $date->format('Y-m-d') . "<br>";
-        
+
         return $calendar_array;
     }
-    
-    public function top(){
+
+    public function top()
+    {
         return view('layouts.index');
     }
 }

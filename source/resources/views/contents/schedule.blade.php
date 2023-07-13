@@ -33,7 +33,7 @@
                                 <div class="col-3">
                                     <input type="text" style="width: 100%;"
                                         id="menu-{{ $menuIndex + 1 }}-workout-{{ $workoutIndex + 1 }}-reps"
-                                        value="{{ $menuExercise->planned_sets }}" disabled>
+                                        value="{{ $menuExercise->reps }}" disabled>
                                 </div>
                             </div>
                         </div>

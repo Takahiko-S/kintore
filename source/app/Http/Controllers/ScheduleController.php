@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Exercises;
+use App\Models\Exercise;
 use App\Models\Menu;
 
 
@@ -15,9 +15,9 @@ class ScheduleController extends Controller
      */
     public function schedule_index()
     {
-        $schedule = Menu::find($id);
+        $menus = Menu::all();
         //dd($menus);
-        return view('contents.schedule', compact('schedule'));
+        return view('contents.schedule', compact('menus'));
     }
 
 
@@ -28,7 +28,7 @@ class ScheduleController extends Controller
         $exercise->save();
 
         $menuExercise = new MenuExercise;
-        $menuExercise->planned_sets = $menuExerciseData['planned_sets'];
+        $menuExercise->reps = $menuExerciseData['reps'];
         $menuExercise->weight = $menuExerciseData['weight'];
         $menuExercise->exercise_id = $exercise->id;
         $menuExercise->menu_id = $menu->id;
@@ -54,7 +54,7 @@ class ScheduleController extends Controller
             abort(404);
         }
 
-        return view('contents.schedule.edit', [
+        return view('contents.schedule_edit', [
             'menu' => $menu,
             'title' => 'スケジュール編集 - ' . $menu->name, // タイトルを設定
         ]);

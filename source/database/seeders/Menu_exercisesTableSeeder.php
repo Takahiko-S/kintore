@@ -18,7 +18,7 @@ class Menu_exercisesTableSeeder extends Seeder
             'menu_id' => 1,
             'exercise_id' => 1,
             'order' => 1,
-            'planned_sets' => 3,
+            'reps' => 3,
             'weight' => 50,
         ]);
 
@@ -26,14 +26,14 @@ class Menu_exercisesTableSeeder extends Seeder
             'menu_id' => 1,
             'exercise_id' => 1,
             'order' => 2,
-            'planned_sets' => 4,
+            'reps' => 4,
             'weight' => 60,
         ]);
         MenuExercise::create([
             'menu_id' => 2,
             'exercise_id' => 5,
             'order' => 1,
-            'planned_sets' => 3,
+            'reps' => 3,
             'weight' => 50,
         ]);
 
@@ -41,14 +41,14 @@ class Menu_exercisesTableSeeder extends Seeder
             'menu_id' => 2,
             'exercise_id' => 6,
             'order' => 2,
-            'planned_sets' => 4,
+            'reps' => 4,
             'weight' => 60,
         ]);
         MenuExercise::create([
             'menu_id' => 2,
             'exercise_id' => 7,
             'order' => 1,
-            'planned_sets' => 3,
+            'reps' => 3,
             'weight' => 50,
         ]);
 
@@ -56,45 +56,45 @@ class Menu_exercisesTableSeeder extends Seeder
             'menu_id' => 2,
             'exercise_id' => 8,
             'order' => 2,
-            'planned_sets' => 4,
             'weight' => 60,
+            'reps' => 10,
         ]);
         MenuExercise::create([
             'menu_id' => 1,
             'exercise_id' => 1,
             'order' => 2,
-            'planned_sets' => 4,
             'weight' => 60,
+            'reps' => 10,
         ]);
         MenuExercise::create([
             'menu_id' => 2,
             'exercise_id' => 5,
             'order' => 1,
-            'planned_sets' => 3,
             'weight' => 50,
+            'reps' => 10,
         ]);
 
         MenuExercise::create([
             'menu_id' => 2,
             'exercise_id' => 8,
             'order' => 2,
-            'planned_sets' => 10,
             'weight' => 60,
+            'reps' => 10,
         ]);
         MenuExercise::create([
             'menu_id' => 2,
             'exercise_id' => 8,
             'order' => 3,
-            'planned_sets' => 10,
             'weight' => 50,
+            'reps' => 10,
         ]);
 
         MenuExercise::create([
             'menu_id' => 2,
             'exercise_id' => 8,
             'order' => 4,
-            'planned_sets' => 10,
             'weight' => 60,
+            'reps' => 10,
         ]);
 
 

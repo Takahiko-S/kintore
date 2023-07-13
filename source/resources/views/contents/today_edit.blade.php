@@ -10,19 +10,19 @@
 
     <x-slot name="main">
         <div class="container">
-            <h1>メニューを編集: {{ $today->name }}</h1>
+            <h1>メニューを編集: {{ $menu->name }}</h1>
 
-            <form action="{{ route('today.update', ['today' => $today->id]) }}" method="post">
+            <form action="{{ route('today_update', ['id' => $menu->id]) }}" method="post">
                 @csrf
                 @method('PUT')
 
                 <div class="form-group">
                     <label>メニュー名</label>
-                    <input type="text" name="name" value="{{ $today->name }}" class="form-control">
+                    <input type="text" name="name" value="{{ $menu->name }}" class="form-control">
                 </div>
 
                 <h2>種目</h2>
-                @foreach ($today->menuExercises as $index => $menuExercise)
+                @foreach ($menu->menuExercises as $index => $menuExercise)
                     <div class="form-group row menu-row">
                         <!-- Here we moved menu-row class -->
                         <div class="col-md-12">
@@ -32,8 +32,8 @@
                         </div>
                         <div class="col-md-4">
                             <label>セット数</label>
-                            <input type="number" name="menu_exercises[{{ $index }}][planned_sets]"
-                                value="{{ $menuExercise->planned_sets }}" class="form-control">
+                            <input type="number" name="menu_exercises[{{ $index }}][reps]"
+                                value="{{ $menuExercise->reps }}" class="form-control">
                         </div>
                         <div class="col-md-4">
                             <label>重量 (kg)</label>
@@ -84,10 +84,11 @@
                     exerciseName.prop('disabled', true).hide(); // Hide the exercise name field
 
                     newRow.find(
-                        'input[name^="menu_exercises"][name$="[planned_sets]"], input[name^="menu_exercises"][name$="[weight]"]'
+                        'input[name^="menu_exercises"][name$="[reps]"], input[name^="menu_exercises"][name$="[weight]"]'
                     ).val(''); // Reset set and weight inputs
 
                     newRow.insertAfter(row); // Insert new row after the current one
+                    console.log(newRow);
                 });
             });
         </script>

@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Schedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Exercises;
+use App\Models\Exercise;
 use App\Models\Menu;
 
 
@@ -14,38 +13,26 @@ class ScheduleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function schedule_index()
     {
         $menus = Menu::all();
         //dd($menus);
         return view('contents.schedule', compact('menus'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function schedule_store(Request $request)
     {
-        foreach ($validatedData['menus'] as $menuIndex => $menuData) {
-            $menu = new Menu();
-            $menu->user_id = Auth::user()->id; // もしユーザー認証が必要な場合は適切な方法でユーザーIDを取得する
-            $menu->name = 'メニュー ' . ($menuIndex + 1);
-            $menu->save();
+        $exercise = new Exercise();
+        $exercise->name = $menuExerciseData['name'];
+        $exercise->save();
 
-            // メニューに関連する種目を保存する
-            foreach ($menuData as $exerciseName) {
-                $exercise = Exercises::firstOrCreate(['name' => $exerciseName]);
-                $menu->exercises()->attach($exercise->id);
-            }
-        }
+        $menuExercise = new MenuExercise;
+        $menuExercise->reps = $menuExerciseData['reps'];
+        $menuExercise->weight = $menuExerciseData['weight'];
+        $menuExercise->exercise_id = $exercise->id;
+        $menuExercise->menu_id = $menu->id;
+        $menuExercise->save();
 
         // 成功した場合はリダイレクトやレスポンスを返すなどの処理を行う
 
@@ -54,35 +41,41 @@ class ScheduleController extends Controller
     }
 
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Schedule $schedule)
+
+
+
+
+    public function schedule_edit($id)
     {
-        //
+        $menu = Menu::find($id);
+
+        // メニューが存在しない場合は404エラー
+        if (!$menu) {
+            abort(404);
+        }
+
+        return view('contents.schedule_edit', [
+            'menu' => $menu,
+            'title' => 'スケジュール編集 - ' . $menu->name, // タイトルを設定
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Schedule $schedule)
+    public function schedule_update(Request $request, $id)
     {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Schedule $schedule)
-    {
-        //
-    }
+        $menu = Menu::find($id);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Schedule $schedule)
-    {
-        //
+        // メニューが存在しない場合は404エラー
+        if (!$menu) {
+            abort(404);
+        }
+
+        // データを更新
+        $menu->name = $request->name;
+        $menu->description = $request->description;
+        $menu->save();
+
+        return redirect()->route('schedule.edit', $menu->id)
+            ->with('message', 'スケジュールを更新しました。');
     }
 }

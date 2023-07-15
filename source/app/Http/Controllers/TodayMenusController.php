@@ -11,29 +11,34 @@ class TodayMenusController extends Controller
 {
     public function todayMenu()
     {
+        //withメソッドを使うことで、リレーション先のデータを一度のクエリで取得できるため、menuExecises::とかかなくてＯＫ
         $menu = Menu::with('menuExercises.exercise')->orderBy('id', 'asc')->first();
         return view('contents.today_menu', compact('menu'));
     }
 
     public function todayEdit(string $id)
     {
-        $menu = Menu::find($id);
+        $menu = Menu::find($id);;
         return view('contents.today_edit', compact('menu'));
     }
 
 
     public function todayUpdate(Request $request, string $id)
     {
+        dd($request->all());
         $menu = Menu::find($id);
-        $menu->menu_name = $request->menu_name;
-        foreach ($request->input('menu_exercises') as $index => $menuExerciseData) {
+        $menu->name = $request->name;
+
+        foreach ($request->menu_exercises as $index => $menuExerciseData) { //複数ある配列を更新するときの書き方
             // データが既存のメニューのものか新規のものかを判断する
             if ($index < count($menu->menuExercises)) {
+
                 // 既存のメニューの更新
                 $menuExercise = $menu->menuExercises[$index];
-                $menuExercise->exercise->name = $menuExerciseData['name'];
                 $menuExercise->reps = $menuExerciseData['reps'];
                 $menuExercise->weight = $menuExerciseData['weight'];
+                $menuExercise->order = $menuExerciseData['order'];
+                // dd($menuExercise);
                 $menuExercise->exercise->save();
                 $menuExercise->save();
             } else {
@@ -45,6 +50,7 @@ class TodayMenusController extends Controller
                 $menuExercise = new MenuExercise();
                 $menuExercise->reps = $menuExerciseData['reps'];
                 $menuExercise->weight = $menuExerciseData['weight'];
+                $menuExercise->order = $menuExerciseData['order'];
                 $menuExercise->exercise_id = $exercise->id;
                 $menuExercise->menu_id = $menu->id;
                 $menuExercise->save();

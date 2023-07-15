@@ -10,88 +10,125 @@
 
     <x-slot name="main">
         <div class="container">
-            <h1>メニューを編集: {{ $menu->name }}</h1>
+            <h1>今日のメニュー編集</h1>
 
-            <form action="{{ route('today_update', ['id' => $menu->id]) }}" method="post">
+            <form action="{{ route('today_update', ['id' => $menu->id]) }}" method="POST">
                 @csrf
-                @method('PUT')
-
+                @method('PATCH')
                 <div class="form-group">
-                    <label>メニュー名</label>
-                    <input type="text" name="name" value="{{ $menu->name }}" class="form-control">
+                    <div class="col-md-6">
+                        <label>メニュー名</label>
+                        <input type="text" name="name" value="{{ $menu->name }}" class="form-control">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-primary mt-5 w-25">更新</button>
                 </div>
 
-                <h2>種目</h2>
+                <!-- メニュー編集部分 -->
                 @foreach ($menu->menuExercises as $index => $menuExercise)
-                    <div class="form-group row menu-row">
-                        <!-- Here we moved menu-row class -->
-                        <div class="col-md-12">
-                            <label>種目名</label>
-                            <input type="text" name="menu_exercises[{{ $index }}][name]"
-                                value="{{ $menuExercise->exercise->name }}" class="form-control">
+                    <div class="exercise-block">
+                        <!-- 種目を囲むdiv -->
+                        <h3 class="text-start mt-5">{{ $menuExercise->exercise->name }}</h3>
+
+                        <div class="form-group">
+                            <table class="table table-bordered">
+                                <!-- ラベル部分 -->
+                                <thead>
+                                    <tr>
+                                        <th class="col-md-1">セット数</th>
+                                        <th class="col-md-1">回数</th>
+                                        <th class="col-md-1">重量 (kg)</th>
+                                        <th class="col-md-7">メモ</th>
+                                        <th class="col-md-2">操作</th>
+                                    </tr>
+                                </thead>
+
+                                <!-- データ部分 -->
+                                <tbody>
+                                    <tr class="menu-row text-center">
+                                        <td>
+                                            <span class="set-number"
+                                                name="menu_exercises[{{ $index }}">{{ $menuExercise->order }}</span>
+                                            <!-- セット数 -->
+                                        </td>
+
+
+                                        <td>
+                                            <input type="number" name="menu_exercises[{{ $index }}][reps]"
+                                                value="{{ $menuExercise->reps }}" class="form-control text-center">
+                                            <!-- 回数 -->
+                                        </td>
+                                        <td>
+                                            <input type="number" name="menu_exercises[{{ $index }}][weight]"
+                                                value="{{ $menuExercise->weight }}" class="form-control text-center">
+                                            <!-- 重量 -->
+                                        </td>
+                                        <td>
+                                            <input type="text" name="menu_exercises[{{ $index }}][memo]"
+                                                class="form-control"> <!-- メモ -->
+                                        </td>
+                                        <td>
+                                            <form action="{{ route('today_destroy', $menuExercise->id) }}"
+                                                method="POST" class="w-100">
+                                                @csrf
+                                                <button type="submit" class="btn btn-danger w-100">削除</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="col-md-4">
-                            <label>セット数</label>
-                            <input type="number" name="menu_exercises[{{ $index }}][reps]"
-                                value="{{ $menuExercise->reps }}" class="form-control">
-                        </div>
-                        <div class="col-md-4">
-                            <label>重量 (kg)</label>
-                            <input type="number" name="menu_exercises[{{ $index }}][weight]"
-                                value="{{ $menuExercise->weight }}" class="form-control">
-                        </div>
-                        <div class="col-md-4 align-items-end d-flex justify-content-between">
-                            <button type="button" class="btn btn-primary w-100 add-menu">メニュー追加</button>
-                            <form action="{{ route('today_destroy', $menuExercise->id) }}" method="POST"
-                                class="w-100">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger w-100">削除</button>
-                            </form>
+
+                        <div class="text-center mt-3">
+                            <button type="button" class="btn btn-primary w-25 add-menu">メニュー追加</button>
                         </div>
                     </div>
                 @endforeach
 
-                <div class="col-12 text-center">
+                <div class="col-md-6">
                     <button type="submit" class="btn btn-primary mt-5 w-25">更新</button>
                 </div>
+
             </form>
         </div>
 
-        <div class="col-10 mx-auto mt-5">
 
-        </div>
     </x-slot>
 
     <x-slot name="script">
         <script>
             $(document).ready(function() {
                 $(document).on('click', '.add-menu', function() {
-                    var row = $(this).closest('.menu-row');
-                    var newRowIndex = $('.menu-row').length; // Get the new index before cloning
-                    var newRow = row.clone();
+                    var buttonRow = $(this).closest('div');
+                    var exerciseBlock = buttonRow.closest('.exercise-block'); // 現在の種目ブロックを取得
+                    var newRow = exerciseBlock.find('.menu-row:first').clone(); // 現在の種目ブロックの最初の行を複製
+
+                    var newIndex = exerciseBlock.find('.menu-row').length; // calculate new index
 
                     // Update the name attribute with the new index
                     newRow.find('input[name^="menu_exercises"]').each(function() {
-                        var newName = this.name.replace(/\[\d+\]/, '[' + newRowIndex + ']');
+                        var newName = this.name.replace(/\[\d+\]/, '[' + newIndex + ']');
                         this.name = newName;
                     });
 
-                    var exerciseName = newRow.find('input[name^="menu_exercises"][name$="[name]"]');
-                    exerciseName.after('<input type="hidden" name="' + exerciseName.attr('name') + '" value="' +
-                        exerciseName.val() + '">'); // Add hidden field with exercise name
-                    exerciseName.prev('label').hide(); // Hide the label
-                    exerciseName.prop('disabled', true).hide(); // Hide the exercise name field
-
                     newRow.find(
-                        'input[name^="menu_exercises"][name$="[reps]"], input[name^="menu_exercises"][name$="[weight]"]'
-                    ).val(''); // Reset set and weight inputs
+                        'input[name^="menu_exercises"][name$="[reps]"], input[name^="menu_exercises"][name$="[weight]"], input[name^="menu_exercises"][name$="[memo]"]'
+                    ).val(''); // Reset reps, weight and memo inputs
 
-                    newRow.insertAfter(row); // Insert new row after the current one
-                    console.log(newRow);
+                    // Update the set number
+                    var lastSetNumber = exerciseBlock.find('.menu-row:last .set-number')
+                        .text(); // 現在の種目ブロック内の最後の行のセット数を取得
+                    var newSetNumber = isNaN(parseInt(lastSetNumber)) ? 1 : parseInt(lastSetNumber) +
+                        1; // NaNをチェックして1を設定するか、前のセット数に1を足す
+                    newRow.find('.set-number').text(newSetNumber); // 新しいセット数を設定
+
+                    newRow.appendTo(exerciseBlock.find('tbody')); // 現在の種目ブロックのtbodyに新しい行を追加
                 });
             });
         </script>
+
+
 
     </x-slot>
 

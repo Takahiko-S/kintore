@@ -34,7 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/schedule', [ScheduleController::class, 'schedule_index'])->name('schedule.index');
     Route::post('/schedule', [ScheduleController::class, 'schedule_store'])->name('schedule.store');
     Route::get('/schedule/{id}/edit', [ScheduleController::class, 'schedule_edit'])->name('schedule.edit');
-    Route::patch('/schedule/{id}', [ScheduleController::class, 'schedule_update'])->name('schedule.update');
+    Route::post('/schedule/{id}', [ScheduleController::class, 'schedule_update'])->name('schedule.update');
 });
 
 //Route::get('/dashboard', function () {return view('dashboard');})->middleware(['auth', 'verified'])->name('dashboard');

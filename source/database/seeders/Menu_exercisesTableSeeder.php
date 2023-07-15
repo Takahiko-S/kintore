@@ -16,7 +16,7 @@ class Menu_exercisesTableSeeder extends Seeder
         // メニューと種目の関連データを作成
         MenuExercise::create([
             'menu_id' => 1,
-            'exercise_id' => 1,
+            'exercise_id' => 3,
             'order' => 1,
             'reps' => 3,
             'weight' => 50,
@@ -24,13 +24,13 @@ class Menu_exercisesTableSeeder extends Seeder
 
         MenuExercise::create([
             'menu_id' => 1,
-            'exercise_id' => 1,
+            'exercise_id' => 2,
             'order' => 2,
             'reps' => 4,
             'weight' => 60,
         ]);
         MenuExercise::create([
-            'menu_id' => 2,
+            'menu_id' => 1,
             'exercise_id' => 5,
             'order' => 1,
             'reps' => 3,
@@ -38,14 +38,14 @@ class Menu_exercisesTableSeeder extends Seeder
         ]);
 
         MenuExercise::create([
-            'menu_id' => 2,
+            'menu_id' => 1,
             'exercise_id' => 6,
             'order' => 2,
             'reps' => 4,
             'weight' => 60,
         ]);
         MenuExercise::create([
-            'menu_id' => 2,
+            'menu_id' => 1,
             'exercise_id' => 7,
             'order' => 1,
             'reps' => 3,
@@ -53,14 +53,14 @@ class Menu_exercisesTableSeeder extends Seeder
         ]);
 
         MenuExercise::create([
-            'menu_id' => 2,
+            'menu_id' => 1,
             'exercise_id' => 8,
             'order' => 2,
             'weight' => 60,
             'reps' => 10,
         ]);
         MenuExercise::create([
-            'menu_id' => 1,
+            'menu_id' => 2,
             'exercise_id' => 1,
             'order' => 2,
             'weight' => 60,

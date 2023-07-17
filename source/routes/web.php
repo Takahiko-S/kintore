@@ -23,10 +23,12 @@ Route::get('/', [HistoryController::class, 'top'])->name('history.top');
 
 Route::middleware('auth')->group(function () {
     Route::get('/index', [HistoryController::class, 'index'])->name('history.index');
+
     Route::resource('history', HistoryController::class);
     Route::get('/toda_menu', [TodayMenusController::class, 'todayMenu'])->name('today_menu');
     Route::get('/today_edit/{id}', [TodayMenusController::class, 'todayEdit'])->name('today_edit');
     Route::patch('/today_update/{id}', [TodayMenusController::class, 'todayUpdate'])->name('today_update');
+    Route::post('/add_exercise', [TodayMenusController::class, 'addExercises'])->name('add_exercise');
     Route::delete('/today_destroy/{id}', [TodayMenusController::class, 'todayDestroy'])->name('today_destroy');
     //Route::delete('/today_destroy/{id}', [TodayMenuController::class, 'MenuExercisedestroy'])->name('today_destroy');
 

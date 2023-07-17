@@ -18,6 +18,7 @@ class TodayMenusController extends Controller
 
     public function todayEdit(string $id)
     {
+        //
         $menu = Menu::find($id);;
         return view('contents.today_edit', compact('menu'));
     }
@@ -64,9 +65,10 @@ class TodayMenusController extends Controller
 
     public function todayDestroy(string $id)
     {
+
         $menuExercise = MenuExercise::find($id);
         $menu_id = $menuExercise->menu_id;
         $menuExercise->delete();
-        return redirect()->route('today.edit', ['today' => $menu_id]);
+        return response()->json(['menu_id' => $menu_id]);  // JSONレスポンスを返す
     }
 }

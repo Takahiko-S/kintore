@@ -12,11 +12,14 @@
 
     <x-slot name="main">
         <div class="container">
-            <h1 class="text-center">今日のメニュー編集</h1>
+
+            <h1 class="text-center mt-5">今日のメニュー編集</h1>
+
 
             <form action="{{ route('today_update', ['id' => $menu->id]) }}" method="POST">
                 @csrf
                 @method('PATCH')
+
                 <div class="row mt-2">
                     <!-- Button trigger modal -->
                     <div class="col-12 mt-3">
@@ -32,10 +35,14 @@
                                 <button type="submit" class="btn btn-primary">更新</button>
                             </div>
                         </div>
+
                     </div>
-                </div>
+
+                       </div>
+
 
                 <div class="col-md-6 mt-3">
+
                     <h4>メニュー名</h4>
                     <input type="text" name="name" value="{{ $menu->name }}" class="form-control">
                 </div>
@@ -51,9 +58,11 @@
                                 <!-- ラベル部分 -->
                                 <thead>
                                     <tr>
+
                                         <th class="col-1 col-md-1 text-center" style="font-size: 0.8em;">セット</th>
                                         <th class="col-1 col-md-1 text-center">回数</th>
                                         <th class="col-1 col-md-1 text-center">重量 (kg)</th>
+
 
                                     </tr>
 
@@ -91,6 +100,7 @@
                                 </tbody>
                             </table>
                         </div>
+
                         <div class="form-group mt-3">
                             <label for="memo">メモ:</label>
                             <textarea class="form-control" rows="2" name="menu_exercises[{{ $index }}][memo]" rows="3">{{ $menuExercise->memo }}</textarea>
@@ -106,6 +116,7 @@
                                     <i class="fas fa-times-circle"></i>
                                 </button>
                             </div>
+
                         </div>
                     </div>
                 @endforeach
@@ -125,6 +136,7 @@
                                 <button type="submit" class="btn btn-primary">更新</button>
                             </div>
                         </div>
+
                     </div>
                 </div>
 
@@ -189,6 +201,7 @@
             $(document).ready(function() {
                 // '.add-menu'クリック時のイベントハンドラを追加
                 $(document).on('click', '.add-menu', function() {
+
                     // クリックされたボタンのdata-exercise-idを取得
                     var exerciseId = $(this).data('exercise-id');
 
@@ -197,10 +210,13 @@
                     // 種目ブロックの最初の行を複製
                     var newRow = exerciseBlock.find('.menu-row:first').clone();
 
+
                     // 新しいインデックスを計算
                     var newIndex = exerciseBlock.find('.menu-row').length;
 
+
                     // 新しい行の全入力要素をループ
+
                     newRow.find('input[name^="menu_exercises"]').each(function() {
                         // 入力要素のname属性を更新（既存のインデックスを新しいインデックスに書き換え）
                         var newName = this.name.replace(/\[\d+\]/, '[' + newIndex + ']');
@@ -209,6 +225,7 @@
 
                     // 新しい行の回数、重量、メモの入力欄をリセット
                     newRow.find(
+
                         'input[name^="menu_exercises"][name$="[reps]"], input[name^="menu_exercises"][name$="[weight]"], input[name^="menu_exercises"][name$="[memo]"]'
                     ).val('');
 
@@ -224,6 +241,7 @@
 
                     // 新しい行をtbodyに追加
                     newRow.appendTo(exerciseBlock.find('tbody'));
+
                 });
             });
 

@@ -19,7 +19,9 @@
                     <h3>{{ $menuExercises->first()->exercise->name }}</h3>
                     <table class="table">
                         <thead>
+
                             <tr class="text-center">
+
                                 <th scope="col">セット</th>
                                 <th scope="col">Reps</th>
                                 <th scope="col">Weight (kg)</th>
@@ -27,7 +29,9 @@
                         </thead>
                         <tbody>
                             @foreach ($menuExercises as $index => $menuExercise)
+
                                 <tr class="text-center">
+
                                     <th scope="row">{{ $index + 1 }}</th>
                                     <td>{{ $menuExercise->reps }}</td>
                                     <td>{{ $menuExercise->weight }}</td>

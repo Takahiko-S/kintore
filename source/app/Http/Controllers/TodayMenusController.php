@@ -84,4 +84,21 @@ class TodayMenusController extends Controller
         // Redirect to the menu detail page
         return redirect()->route('today_edit', ['id' => $menu->id]);
     }
+    public function addExercises(Request $request)
+    {
+        // Get the request data
+        $exerciseIds = $request->input('selectedExercises');
+        $menuId = $request->input('menu_id');
+
+        // Retrieve the specific Menu
+        $menu = Menu::find($menuId);
+
+        // Save the data
+        foreach ($exerciseIds as $exerciseId) {
+            $menu->exercises()->attach($exerciseId, ['order' => 1]);
+        }
+
+        // Redirect to the menu detail page
+        return redirect()->route('today_edit', ['id' => $menu->id]);
+    }
 }

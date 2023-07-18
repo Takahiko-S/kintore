@@ -25,7 +25,7 @@ class Menu_exercisesTableSeeder extends Seeder
         MenuExercise::create([
             'menu_id' => 1,
             'exercise_id' => 2,
-            'order' => 2,
+            'order' => 1,
             'reps' => 4,
             'weight' => 60,
         ]);
@@ -40,7 +40,7 @@ class Menu_exercisesTableSeeder extends Seeder
         MenuExercise::create([
             'menu_id' => 1,
             'exercise_id' => 6,
-            'order' => 2,
+            'order' => 1,
             'reps' => 4,
             'weight' => 60,
         ]);
@@ -55,14 +55,14 @@ class Menu_exercisesTableSeeder extends Seeder
         MenuExercise::create([
             'menu_id' => 1,
             'exercise_id' => 8,
-            'order' => 2,
+            'order' => 1,
             'weight' => 60,
             'reps' => 10,
         ]);
         MenuExercise::create([
             'menu_id' => 2,
             'exercise_id' => 1,
-            'order' => 2,
+            'order' => 1,
             'weight' => 60,
             'reps' => 10,
         ]);
@@ -77,25 +77,11 @@ class Menu_exercisesTableSeeder extends Seeder
         MenuExercise::create([
             'menu_id' => 2,
             'exercise_id' => 8,
-            'order' => 2,
+            'order' => 1,
             'weight' => 60,
-            'reps' => 10,
-        ]);
-        MenuExercise::create([
-            'menu_id' => 2,
-            'exercise_id' => 8,
-            'order' => 3,
-            'weight' => 50,
             'reps' => 10,
         ]);
 
-        MenuExercise::create([
-            'menu_id' => 2,
-            'exercise_id' => 8,
-            'order' => 4,
-            'weight' => 60,
-            'reps' => 10,
-        ]);
 
 
 

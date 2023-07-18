@@ -11,13 +11,18 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('history.top')" :active="request()->routeIs('history.top')">
-                        {{ __('ホーム') }}
-                    </x-nav-link>
-                </div>
-           
-            </div>
+				<div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+					<x-nav-link :href="route('history.top')"
+						:active="request()->routeIs('history.top')"> {{ __('ホーム') }} </x-nav-link>
+					<x-nav-link :href="route('today_menu')"
+						:active="request()->routeIs('today_menu')"> {{ __('今日の種目') }} </x-nav-link>
+					<x-nav-link :href="route('schedule.index')"
+						:active="request()->routeIs('schedule.index')"> {{ __('スケジュール') }}
+					</x-nav-link>
+
+				</div>
+
+			</div>
 
             <!-- Settings Dropdown -->
              @if(isset(Auth::user()->id))
@@ -85,14 +90,18 @@
 
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('history.top')" :active="request()->routeIs('history.top')">
-                {{ __('ホーム') }}
-            </x-responsive-nav-link>
-        </div>
-        
+		<div class="pt-2 pb-3 space-y-1">
+			<x-responsive-nav-link :href="route('history.top')"
+				:active="request()->routeIs('history.top')"> {{ __('ホーム') }} </x-responsive-nav-link>
+			<x-responsive-nav-link :href="route('today_menu')" 
+			:active="request()->routeIs('today_menu')"> {{ __('今日の種目') }} </x-responsive-nav-link:href>
+				<x-responsive-nav-link :href="route('schedule.index')" 
+				:active="request()->routeIs('schedule.index')"> {{ __('スケジュール') }}	</x-responsive-nav-link:href>
+		
+		</div>
 
-        <!-- Responsive Settings Options -->
+
+		<!-- Responsive Settings Options -->
         @if(isset(Auth::user()->id))
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
             <div class="px-4">

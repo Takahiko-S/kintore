@@ -77,10 +77,18 @@
                                         <input type="hidden" name="menu_exercises[{{ $index }}][exercise_id]"
                                             value="{{ $menuExercise->exercise->id }}">
                                         <td>
-                                            <span class="set-number"
+                            <!--ーーーーーーーーーーーーーーーーーーー nameがブラウザで表記するとおかしくなってるから修正するーーーーーーーーーーーーーーーーー -->
+                                            <span class="set-number">
+
                                                 name="menu_exercises[{{ $index }}">{{ $menuExercise->order }}
                                             </span>
+
+
+                                                
+                            <!--ーーーーーーーーーーーーーーーーーーー nameがブラウザで表記するとおかしくなってるから修正するーーーーーーーーーーーーーーーーー -->
+
                                             <!-- セット数 -->
+                                            
                                         </td>
 
 

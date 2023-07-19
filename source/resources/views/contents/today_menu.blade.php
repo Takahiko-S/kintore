@@ -10,7 +10,7 @@
 
     <x-slot name="main">
         <div class="container">
-            <h1>Today's Menu: {{ $menu->name }}</h1>
+            <h1>{{ \Carbon\Carbon::now()->format('Y/m/d') }}: {{ $menu->name }}</h1>
             <p>{{ $menu->description }}</p>
 
             <h2>Exercises</h2>
@@ -19,7 +19,9 @@
                     <h3>{{ $menuExercises->first()->exercise->name }}</h3>
                     <table class="table">
                         <thead>
-                            <tr>
+
+                            <tr class="text-center">
+
                                 <th scope="col">セット</th>
                                 <th scope="col">Reps</th>
                                 <th scope="col">Weight (kg)</th>
@@ -27,7 +29,9 @@
                         </thead>
                         <tbody>
                             @foreach ($menuExercises as $index => $menuExercise)
-                                <tr>
+
+                                <tr class="text-center">
+
                                     <th scope="row">{{ $index + 1 }}</th>
                                     <td>{{ $menuExercise->reps }}</td>
                                     <td>{{ $menuExercise->weight }}</td>

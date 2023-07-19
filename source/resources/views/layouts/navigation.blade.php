@@ -81,6 +81,9 @@
             <x-responsive-nav-link :href="route('history.index')" :active="request()->routeIs('history.index')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('today_menu')" :active="request()->routeIs('today_menu')">
+                {{ __('今日の種目') }}
+            </x-responsive-nav-link>
         </div>
 
         <!-- Responsive Settings Options -->

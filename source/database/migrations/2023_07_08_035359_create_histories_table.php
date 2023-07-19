@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('menu_id');
             $table->foreign('menu_id')->references('id')->on('menus');
             $table->date('exercise_date');
-            $table->integer('exercise_id');
+            $table->unsignedBigInteger('exercise_id');
             $table->integer('sets');
             $table->integer('weight');
             $table->boolean('is_completed');

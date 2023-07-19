@@ -82,6 +82,7 @@ class Menu_exercisesTableSeeder extends Seeder
             'reps' => 10,
         ]);
 
+
         MenuExercise::create([
             'menu_id' => 2,
             'exercise_id' => 8,

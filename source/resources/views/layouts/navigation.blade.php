@@ -13,7 +13,9 @@
                 <!-- Navigation Links -->
 				<div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
 					<x-nav-link :href="route('history.index')"
+
 						:active="request()->routeIs('history.index')"> {{ __('Dashboard')}} </x-nav-link>
+
 					<x-nav-link :href="route('today_menu')"
 						:active="request()->routeIs('today_menu')"> {{ __('今日の種目') }} </x-nav-link>
 					<x-nav-link :href="route('schedule.index')"
@@ -82,10 +84,15 @@
             <x-responsive-nav-link :href="route('history.index')" :active="request()->routeIs('history.index')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+<<<<<<< HEAD
 
             <x-responsive-nav-link :href="route('today_menu')" :active="request()->routeIs('today_menu')"> {{ __('今日の種目') }} </x-responsive-nav-link:href>
 			  <x-responsive-nav-link :href="route('schedule.index')" :active="request()->routeIs('schedule.index')"> {{ __('スケジュール') }}	</x-responsive-nav-link:href>
 
+=======
+            <x-responsive-nav-link :href="route('today_menu')" :active="request()->routeIs('today_menu')"> {{ __('今日の種目') }} </x-responsive-nav-link:href>
+			  <x-responsive-nav-link :href="route('schedule.index')" :active="request()->routeIs('schedule.index')"> {{ __('スケジュール') }}	</x-responsive-nav-link:href>
+>>>>>>> feat/edit_schedule
         </div>
 
         <!-- Responsive Settings Options -->

@@ -78,7 +78,8 @@
                                             value="{{ $menuExercise->exercise->id }}">
                                         <td>
                             <!--ーーーーーーーーーーーーーーーーーーー nameがブラウザで表記するとおかしくなってるから修正するーーーーーーーーーーーーーーーーー -->
-                                            <span class="set-number">
+
+                                            <span class="set-number"
 
                                                 name="menu_exercises[{{ $index }}">{{ $menuExercise->order }}
                                             </span>
@@ -86,6 +87,7 @@
 
                                                 
                             <!--ーーーーーーーーーーーーーーーーーーー nameがブラウザで表記するとおかしくなってるから修正するーーーーーーーーーーーーーーーーー -->
+
 
                                             <!-- セット数 -->
                                             

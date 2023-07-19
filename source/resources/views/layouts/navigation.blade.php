@@ -84,16 +84,12 @@
             <x-responsive-nav-link :href="route('history.index')" :active="request()->routeIs('history.index')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-<<<<<<< HEAD
+
 
             <x-responsive-nav-link :href="route('today_menu')" :active="request()->routeIs('today_menu')"> {{ __('今日の種目') }} </x-responsive-nav-link:href>
 			  <x-responsive-nav-link :href="route('schedule.index')" :active="request()->routeIs('schedule.index')"> {{ __('スケジュール') }}	</x-responsive-nav-link:href>
 
-=======
-            <x-responsive-nav-link :href="route('today_menu')" :active="request()->routeIs('today_menu')"> {{ __('今日の種目') }} </x-responsive-nav-link:href>
-			  <x-responsive-nav-link :href="route('schedule.index')" :active="request()->routeIs('schedule.index')"> {{ __('スケジュール') }}	</x-responsive-nav-link:href>
->>>>>>> feat/edit_schedule
-        </div>
+
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">

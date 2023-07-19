@@ -29,13 +29,13 @@ class TodayMenusController extends Controller
     public function todayUpdate(Request $request, string $id)
     {
         dd($request->all());
-        $menu = Menu::find($id);
-
+        $menu = Menu::findOrFail($id);
         $menu->name = $request->name;
+        
 
         foreach ($request->menu_exercises as $menuExerciseData) {
             $menuExercise = MenuExercise::find($menuExerciseData['id']);
-
+            
             if ($menuExercise !== null) {
                 // 既存のメニューエクササイズを更新
                 $menuExercise->reps = $menuExerciseData['reps'];
@@ -48,11 +48,12 @@ class TodayMenusController extends Controller
                 $newMenuExercise->exercise_id = $menuExerciseData['exercise_id'];
                 $newMenuExercise->reps = $menuExerciseData['reps'];
                 $newMenuExercise->weight = $menuExerciseData['weight'];
+                $menu->load('menuExercises');
                 $newMenuExercise->order = count($menu->menuExercises) + 1; // assuming order indicates the number of sets
                 $newMenuExercise->save();
             }
         }
-
+        
         $menu->save();
         session()->flash('message', 'メニューが更新されました');
         return redirect()->route('today_menu');

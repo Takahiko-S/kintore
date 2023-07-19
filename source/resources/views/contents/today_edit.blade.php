@@ -38,16 +38,23 @@
 
                     </div>
 
-                       </div>
-
-
-                <div class="col-md-6 mt-3">
-
-                    <h4>メニュー名</h4>
-                    <input type="text" name="name" value="{{ $menu->name }}" class="form-control">
                 </div>
 
-                <!-- メニュー編集部分 -->
+
+	<div class="col-md-6 mt-3">
+			@if ($menu->menuExercises->isEmpty())
+			<div class="col-md-6 mt-3">
+				<h4>メニュー名</h4>
+				<input type="text" name="name" value="{{ $menu->name }}"
+					class="form-control">
+			</div>
+			<h4 text-center>メニューが登録されていません。</h4>
+			@else
+			<h4>メニュー名</h4>
+			<input type="text" name="name" value="{{ $menu->name }}" class="form-control">
+		</div>
+
+		<!-- メニュー編集部分 -->
                 @foreach ($menu->menuExercises as $index => $menuExercise)
                     <div class="exercise-block" data-exercise-id="{{ $menuExercise->id }}">
                         <!-- 種目を囲むdiv -->
@@ -58,54 +65,29 @@
                                 <!-- ラベル部分 -->
                                 <thead>
                                     <tr>
-
                                         <th class="col-1 col-md-1 text-center" style="font-size: 0.8em;">セット</th>
                                         <th class="col-1 col-md-1 text-center">回数</th>
                                         <th class="col-1 col-md-1 text-center">重量 (kg)</th>
-
-
                                     </tr>
-
-
                                 </thead>
 
                                 <!-- データ部分 -->
                                 <tbody>
                                     <tr class="menu-row text-center">
-                                        <input type="hidden" name="menu_exercises[{{ $index }}][id]"
-                                            value="{{ $menuExercise->id }}">
-                                        <input type="hidden" name="menu_exercises[{{ $index }}][exercise_id]"
-                                            value="{{ $menuExercise->exercise->id }}">
-                                        <td>
-                            <!--ーーーーーーーーーーーーーーーーーーー nameがブラウザで表記するとおかしくなってるから修正するーーーーーーーーーーーーーーーーー -->
-
-                                            <span class="set-number"
-
-                                                name="menu_exercises[{{ $index }}">{{ $menuExercise->order }}
-                                            </span>
-
-
-                                                
-                            <!--ーーーーーーーーーーーーーーーーーーー nameがブラウザで表記するとおかしくなってるから修正するーーーーーーーーーーーーーーーーー -->
-
-
-                                            <!-- セット数 -->
-                                            
+                                        <input type="hidden" name="menu_exercises[{{ $index }}][id]" value="{{ $menuExercise->id }}">
+                                        <input type="hidden" name="menu_exercises[{{ $index }}][exercise_id]"  value="{{ $menuExercise->exercise->id }}">                                            
+                                        <td>                    
+                                            <span class="set-number" name="menu_exercises[{{ $index }}][order]">{{ $menuExercise->order }}</span>
                                         </td>
-
-
+                                        
                                         <td>
-                                            <input type="number" name="menu_exercises[{{ $index }}][reps]"
-                                                value="{{ $menuExercise->reps }}" class="form-control text-center">
+                                            <input type="number" name="menu_exercises[{{ $index }}][reps]" value="{{ $menuExercise->reps }}" class="form-control text-center">
                                             <!-- 回数 -->
                                         </td>
                                         <td>
-                                            <input type="number" name="menu_exercises[{{ $index }}][weight]"
-                                                value="{{ $menuExercise->weight }}" class="form-control text-center">
+                                            <input type="number" name="menu_exercises[{{ $index }}][weight]" value="{{ $menuExercise->weight }}" class="form-control text-center">
                                             <!-- 重量 -->
                                         </td>
-
-
                                     </tr>
                                 </tbody>
                             </table>
@@ -130,6 +112,7 @@
                         </div>
                     </div>
                 @endforeach
+                @endif
 
                 <div class="row mt-2">
                     <!-- Button trigger modal -->
@@ -152,6 +135,19 @@
 
 
             </form>
+            
+       <!-- --------------------------------------------テストコード----------------------------------------------------------------- -->     
+            <div id="input_pluralBox">
+    <div id="input_plural">
+        <input type="text" class="form-control" placeholder="サンプルテキストサンプルテキストサンプルテキスト">
+        <input type="button" value="＋" class="add pluralBtn">
+        <input type="button" value="－" class="del pluralBtn">
+    </div>
+</div>
+     <!-- --------------------------------------------テストコード----------------------------------------------------------------- -->
+     
+     
+     
         </div>
         <!--ーーーーーーーーーーーーーーーーーーーーーーーーーーモーダルーーーーーーーーーーーーーーーーーーーー-->
 
@@ -195,6 +191,15 @@
                     </div>
                 </div>
             </div>
+            
+
+<div id="input_pluralBox">
+    <div id="input_plural">
+        <input type="text" class="form-control" placeholder="サンプルテキストサンプルテキストサンプルテキスト">
+        <input type="button" value="＋" class="add pluralBtn">
+        <input type="button" value="－" class="del pluralBtn">
+    </div>
+</div>
         </div>
 
 
@@ -232,7 +237,7 @@
                         var newName = this.name.replace(/\[\d+\]/, '[' + newIndex + ']');
                         this.name = newName;
                     });
-
+                    newRow.find('input[name^="menu_exercises"][name$="[id]"]').val('new');
                     // 新しい行の回数、重量、メモの入力欄をリセット
                     newRow.find(
 
@@ -289,10 +294,25 @@
                 }
             });
 
-
-
-
             // ----------------------------------------削除Ajax--------------------------------------------
+
+
+
+            <!-- --------------------------------------------テストコード----------------------------------------------------------------- -->
+
+            $(document).on("click", ".add", function() {
+                $(this).parent().clone(true).insertAfter($(this).parent());
+            });
+            $(document).on("click", ".del", function() {
+                var target = $(this).parent();
+                if (target.parent().children().length > 1) {
+                    target.remove();
+                }
+            });
+
+
+            <!-- --------------------------------------------テストコード----------------------------------------------------------------- -->
+           
         </script>
 
 

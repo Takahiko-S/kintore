@@ -13,10 +13,8 @@ return new class extends Migration
     {
         Schema::create('histories', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->unsignedBigInteger('menu_id');
-            $table->foreign('menu_id')->references('id')->on('menus');
+            $table->unsignedBigInteger('user_id');           
+            $table->unsignedBigInteger('menu_id');        
             $table->date('exercise_date');
             $table->unsignedBigInteger('exercise_id');
             $table->integer('sets');

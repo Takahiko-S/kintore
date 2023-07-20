@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Menu;
 use App\Models\Exercises;
 use App\Models\MenuExercise;
+use Database\Seeders\MenusTableSeeder;
 
 
 class ScheduleController extends Controller
@@ -17,8 +18,9 @@ class ScheduleController extends Controller
     public function schedule_index()
     {
         $menus = Menu::all();
+        $exercises = Exercises::all()->groupBy('body_part');
         //dd($menus);
-        return view('contents.schedule', compact('menus'));
+        return view('contents.schedule', compact('menus','exercises'));
     }
 
 
@@ -40,10 +42,6 @@ class ScheduleController extends Controller
         // 例: リダイレクト
         return redirect()->route('schedule.index')->with('success', 'スケジュールが保存されました。');
     }
-
-
-
-
 
 
     public function schedule_Edit(string $id)
@@ -73,4 +71,17 @@ class ScheduleController extends Controller
         return redirect()->route('schedule.edit', $menu->id)
             ->with('message', 'スケジュールを更新しました。');
     }
+    
+    public function menuDelete(Request $request)
+    {
+ 
+        Menu::destroy($request->menuId);
+        
+        return response()->json(['status' => 'success']);
+    }
+    
+    
+    
+    
+    
 }

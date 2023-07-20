@@ -27,6 +27,7 @@
                                 <th scope="col">Weight (kg)</th>
                             </tr>
                         </thead>
+                        
                         <tbody>
                             @foreach ($menuExercises as $index => $menuExercise)
 

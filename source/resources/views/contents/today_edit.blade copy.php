@@ -204,36 +204,49 @@
             // ---------------------メニュー追加ボタンを押したときの処理--------------------------------------
             // ドキュメントが読み込まれた後に実行
             $(document).ready(function() {
+                // '.add-menu'クリック時のイベントハンドラを追加
                 $(document).on('click', '.add-menu', function() {
+
+                    // クリックされたボタンのdata-exercise-idを取得
                     var exerciseId = $(this).data('exercise-id');
+                    // 親要素から種目ブロックを取得
                     var exerciseBlock = $('.exercise-block[data-exercise-id="' + exerciseId + '"]');
+                    // 種目ブロックの最初の行を複製
                     var newRow = exerciseBlock.find('.menu-row:first').clone();
+                    // すべての「menu-row」クラスを持つ要素の name 属性からインデックスを取得
                     var indices = $('input[name^="menu_exercises"]').map(function() {
+                        // 正規表現を使用して name 属性からインデックス部分を抽出し、数値に変換します
                         var match = this.name.match(/\[(\d+)\]/);
                         return match ? parseInt(match[1]) : null;
                     }).get();
+                    // 新しいインデックスを計算
+                    // var newIndex = exerciseBlock.find('.menu-row').length;
                     var newIndex = Math.max.apply(null, indices) + 1;
+                    // 新しい行の全入力要素をループ
 
                     newRow.find('input[name^="menu_exercises"]').each(function() {
+                        // 入力要素のname属性を更新（既存のインデックスを新しいインデックスに書き換え）
                         var newName = this.name.replace(/\[\d+\]/, '[' + newIndex + ']');
                         this.name = newName;
                     });
                     newRow.find('input[name^="menu_exercises"][name$="[id]"]').val('new');
+                    // 新しい行の回数、重量、メモの入力欄をリセット
                     newRow.find(
+                        // 'input[name^="menu_exercises"][name$="[reps]"], input[name^="menu_exercises"][name$="[weight]"], input[name^="menu_exercises"][name$="[memo]"]'
                         'input[name^="menu_exercises"][name$="[order]"], input[name^="menu_exercises"][name$="[reps]"], input[name^="menu_exercises"][name$="[weight]"], input[name^="menu_exercises"][name$="[memo]"]'
                     ).val('');
+                    // 新しい行に'new-row'クラスを追加
                     newRow.addClass('new-row');
-
-
-                    // var lastSetNumberText = exerciseBlock.find('.menu-row:last .set-number').text().trim();
-                    //var matches = lastSetNumberText.match(/\d+$/);
-                    var lastSetNumber = parseInt(exerciseBlock.find('.menu-row:last input[name$="[order]"]')
-                        .val(), 10) || 0;
-                    var newSetNumber = isNaN(lastSetNumber) ? 1 : lastSetNumber + 1;
-                    console.log(lastSetNumber);
-                    console.log(newSetNumber);
+                    // 種目ブロックの最後の行のセット数を取得
+                    var lastSetNumber = exerciseBlock.find('.menu-row:last .set-number').text();
+                    // 新しいセット数を計算（最後のセット数がNaNなら1、そうでなければ最後のセット数に1を足す）
+                    var newSetNumber = isNaN(parseInt(lastSetNumber)) ? 1 : parseInt(lastSetNumber) + 1;
+                    // 新しい行のセット番号を更新
                     newRow.find('.set-number').text(newSetNumber);
+
+                    // 新しい行の順番（order）の値を更新
                     newRow.find('input[name^="menu_exercises"][name$="[order]"]').val(newSetNumber);
+                    // 新しい行をtbodyに追加
                     newRow.appendTo(exerciseBlock.find('tbody'));
                 });
             });
@@ -261,8 +274,7 @@
                             _method: 'DELETE' // DELETEメソッドを指定
                         },
                         success: function(response) {
-                            location.href = '/today_edit/' + response
-                                .menu_id; // 適切なURLに修正してください
+                            location.href = '/today_edit/' + response.menu_id; // 適切なURLに修正してください
                         }
                     });
                 }

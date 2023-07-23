@@ -1,201 +1,196 @@
 <x-base-layout>
- <x-slot name="title">スケジュール編集</x-slot>
- 
-  <x-slot	name="css">
-<style>
-/* 必要なCSSをここに書く */
-</style>
-</x-slot> 
+    <x-slot name="title">スケジュール編集</x-slot>
 
-<x-slot name="main">
-<div class="container">
-	<h1 class="text-center mt-5">スケジュール編集</h1>
+    <x-slot name="css">
+        <style>
+            /* 必要なCSSをここに書く */
+        </style>
+    </x-slot>
 
-	<form action="{{ route('today_update', ['id' => $menu->id]) }}"
-		method="POST">
-		@csrf @method('PATCH')
+    <x-slot name="main">
+        <div class="container">
+            <h1 class="text-center mt-5">スケジュール編集</h1>
 
-		<div class="row mt-2">
-			<!-- Button trigger modal -->
-			<div class="col-12 mt-3">
-				<div class="row">
-					<div class="col-6">
-						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" id="modal_bt">種目追加</button>
-					</div>
+            <form action="{{ route('today_update', ['id' => $menu->id]) }}" method="POST">
+                @csrf @method('PATCH')
 
-					<div class="col-6 text-end">
-						<button type="submit" class="btn btn-primary">更新</button>
-					</div>
-				</div>
+                <div class="row mt-2">
+                    <!-- Button trigger modal -->
+                    <div class="col-12 mt-3">
+                        <div class="row">
+                            <div class="col-6">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal" id="modal_bt">種目追加</button>
+                            </div>
 
-			</div>
+                            <div class="col-6 text-end">
+                                <button type="submit" class="btn btn-primary">更新</button>
+                            </div>
+                        </div>
 
-		</div>
+                    </div>
 
-
-		<div class="col-md-6 mt-3">
-			@if ($menu->menuExercises->isEmpty())
-			<div class="col-md-6 mt-3">
-				<h4>メニュー名</h4>
-				<input type="text" name="name" value="{{ $menu->name }}"
-					class="form-control">
-			</div>
-			<h4 text-center>メニューが登録されていません。</h4>
-			@else
-			<h4>メニュー名</h4>
-			<input type="text" name="name" value="{{ $menu->name }}"
-				class="form-control">
-		</div>
-
-		<!-- メニュー編集部分 -->
-		@foreach ($menu->menuExercises as $index => $menuExercise)
-		<div class="exercise-block" data-exercise-id="{{ $menuExercise->id }}">
-			<!-- 種目を囲むdiv -->
-			<h3 class="text-start mt-3">{{ $menuExercise->exercise->name }}</h3>
-
-			<div class="form-group">
-				<table class="table table-bordered">
-					<!-- ラベル部分 -->
-					<thead>
-						<tr>
-
-							<th class="col-1 col-md-1 text-center" style="font-size: 0.8em;">セット</th>
-							<th class="col-1 col-md-1 text-center">回数</th>
-							<th class="col-1 col-md-1 text-center">重量 (kg)</th>
+                </div>
 
 
-						</tr>
+                <div class="col-md-6 mt-3">
+                    @if ($menu->menuExercises->isEmpty())
+                        <div class="col-md-6 mt-3">
+                            <h4>メニュー名</h4>
+                            <input type="text" name="name" value="{{ $menu->name }}" class="form-control">
+                        </div>
+                        <h4 text-center>メニューが登録されていません。</h4>
+                    @else
+                        <h4>メニュー名</h4>
+                        <input type="text" name="name" value="{{ $menu->name }}" class="form-control">
+                </div>
+
+                <!-- メニュー編集部分 -->
+                @foreach ($menu->menuExercises as $index => $menuExercise)
+                    <div class="exercise-block" data-exercise-id="{{ $menuExercise->id }}">
+                        <!-- 種目を囲むdiv -->
+                        <h3 class="text-start mt-3">{{ $menuExercise->exercise->name }}</h3>
+
+                        <div class="form-group">
+                            <table class="table table-bordered">
+                                <!-- ラベル部分 -->
+                                <thead>
+                                    <tr>
+
+                                        <th class="col-1 col-md-1 text-center" style="font-size: 0.8em;">セット</th>
+                                        <th class="col-1 col-md-1 text-center">回数</th>
+                                        <th class="col-1 col-md-1 text-center">重量 (kg)</th>
 
 
-					</thead>
-
-					<!-- データ部分 -->
-					<tbody>
-						<tr class="menu-row text-center">
-							<input type="hidden" name="menu_exercises[{{ $index }}][id]"
-								value="{{ $menuExercise->id }}">
-							<input type="hidden"
-								name="menu_exercises[{{ $index }}][exercise_id]"
-								value="{{ $menuExercise->exercise->id }}">
-							<td>
-								<!--ーーーーーーーーーーーーーーーーーーー nameがブラウザで表記するとおかしくなってるから修正するーーーーーーーーーーーーーーーーー -->
-
-								<span class="set-number" name="menu_exercises[{{ $index }}]">{{
-									$menuExercise->order }} </span> <!--ーーーーーーーーーーーーーーーーーーー nameがブラウザで表記するとおかしくなってるから修正するーーーーーーーーーーーーーーーーー -->
+                                    </tr>
 
 
-								<!-- セット数 -->
+                                </thead>
 
-							</td>
+                                <!-- データ部分 -->
+                                <tbody>
+                                    <tr class="menu-row text-center">
+                                        <input type="hidden" name="menu_exercises[{{ $index }}][id]"
+                                            value="{{ $menuExercise->id }}">
+                                        <input type="hidden" name="menu_exercises[{{ $index }}][exercise_id]"
+                                            value="{{ $menuExercise->exercise->id }}">
+                                        <td>
+                                            <!--ーーーーーーーーーーーーーーーーーーー nameがブラウザで表記するとおかしくなってるから修正するーーーーーーーーーーーーーーーーー -->
 
-
-							<td><input type="number"
-								name="menu_exercises[{{ $index }}][reps]"
-								value="{{ $menuExercise->reps }}"
-								class="form-control text-center"> <!-- 回数 --></td>
-							<td><input type="number"
-								name="menu_exercises[{{ $index }}][weight]"
-								value="{{ $menuExercise->weight }}"
-								class="form-control text-center"> <!-- 重量 --></td>
-
-
-						</tr>
-					</tbody>
-				</table>
-			</div>
-
-			<div class="form-group mt-3">
-				<label for="memo">メモ:</label>
-				<textarea class="form-control" rows="2"
-					name="menu_exercises[{{ $index }}][memo]" rows="3">{{ $menuExercise->memo }}</textarea>
-			</div>
-			<div class="text-center mt-3 row">
-				<div class="col-6">
-					<button type="button" class="btn btn-primary w-75 add-menu"
-						data-exercise-id="{{ $menuExercise->id }}">セット追加</button>
-				</div>
-				<div class="col-6">
-					<button type="button" class="btn btn-danger w-75 delete-button"
-						data-id="{{ $menuExercise->id }}">
-						<i class="fas fa-times-circle"></i>
-					</button>
-				</div>
-
-			</div>
-		</div>
-		@endforeach
-		@endif
-
-		<div class="row mt-2">
-			<!-- Button trigger modal -->
-			<div class="col-12 mt-3">
-				<div class="row">
-					<div class="col-6">
-						<button type="button" class="btn btn-primary"
-							data-bs-toggle="modal" data-bs-target="#exampleModal"
-							id="modal_bt">種目追加</button>
-					</div>
-
-					<div class="col-6 text-end">
-						<button type="submit" class="btn btn-primary">更新</button>
-					</div>
-				</div>
-
-			</div>
-		</div>
+                                            <span class="set-number"
+                                                name="menu_exercises[{{ $index }}]">{{ $menuExercise->order }}
+                                            </span>
+                                            <!--ーーーーーーーーーーーーーーーーーーー nameがブラウザで表記するとおかしくなってるから修正するーーーーーーーーーーーーーーーーー -->
 
 
-	</form>
+                                            <!-- セット数 -->
 
-</div>
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1"
-	aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel">追加種目選択</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal"
-					aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<form id="exercises-form" action="{{ route('add_exercise') }}"
-					method="POST">
-					@csrf <input type="hidden" name="menu_id" value="{{ $menu->id }}">
-
-					@foreach ($exercises as $body_part => $exercises_in_body_part)
-					<div>
-						<h5>{{ $body_part }}</h5>
-						<div class="d-flex flex-wrap justify-content-start">
-							@foreach ($exercises_in_body_part as $exercise)
-							<div class="form-check m-2">
-								<input class="form-check-input" type="checkbox"
-									value="{{ $exercise->id }}" id="exercise{{ $exercise->id }}"
-									name="selectedExercises[]"> <label class="form-check-label"
-									for="exercise{{ $exercise->id }}"> {{ $exercise->name }} </label>
-							</div>
-							@endforeach
-						</div>
-					</div>
-					@endforeach
+                                        </td>
 
 
-					<button type="button" class="btn btn-secondary"
-						data-bs-dismiss="modal">閉じる</button>
-					<button type="submit" class="btn btn-info" id="add-exercises">種目追加</button>
+                                        <td><input type="number" name="menu_exercises[{{ $index }}][reps]"
+                                                value="{{ $menuExercise->reps }}" class="form-control text-center">
+                                            <!-- 回数 -->
+                                        </td>
+                                        <td><input type="number" name="menu_exercises[{{ $index }}][weight]"
+                                                value="{{ $menuExercise->weight }}" class="form-control text-center">
+                                            <!-- 重量 -->
+                                        </td>
 
-				</form>
-			</div>
-		</div>
-	</div>
-</div>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="memo">メモ:</label>
+                            <textarea class="form-control" rows="2" name="menu_exercises[{{ $index }}][memo]" rows="3">{{ $menuExercise->memo }}</textarea>
+                        </div>
+                        <div class="text-center mt-3 row">
+                            <div class="col-6">
+                                <button type="button" class="btn btn-primary w-75 add-menu"
+                                    data-exercise-id="{{ $menuExercise->id }}">セット追加</button>
+                            </div>
+                            <div class="col-6">
+                                <button type="button" class="btn btn-danger w-75 delete-button"
+                                    data-id="{{ $menuExercise->id }}">
+                                    <i class="fas fa-times-circle"></i>
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                @endforeach
+                @endif
+
+                <div class="row mt-2">
+                    <!-- Button trigger modal -->
+                    <div class="col-12 mt-3">
+                        <div class="row">
+                            <div class="col-6">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal" id="modal_bt">種目追加</button>
+                            </div>
+
+                            <div class="col-6 text-end">
+                                <button type="submit" class="btn btn-primary">更新</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </form>
+
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">追加種目選択</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="exercises-form" action="{{ route('add_exercise') }}" method="POST">
+                            @csrf <input type="hidden" name="menu_id" value="{{ $menu->id }}">
+
+                            @foreach ($exercises as $body_part => $exercises_in_body_part)
+                                <div>
+                                    <h5>{{ $body_part }}</h5>
+                                    <div class="d-flex flex-wrap justify-content-start">
+                                        @foreach ($exercises_in_body_part as $exercise)
+                                            <div class="form-check m-2">
+                                                <input class="form-check-input" type="checkbox"
+                                                    value="{{ $exercise->id }}" id="exercise{{ $exercise->id }}"
+                                                    name="selectedExercises[]"> <label class="form-check-label"
+                                                    for="exercise{{ $exercise->id }}"> {{ $exercise->name }} </label>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endforeach
+
+
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+                            <button type="submit" class="btn btn-info" id="add-exercises">種目追加</button>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
 
 
 
-<!--ーーーーーーーーーーーーーーーーーーーーーーーーーーモーダルーーーーーーーーーーーーーーーーーーーー--> </x-slot> <x-slot
-	name="script"> <script>
+        <!--ーーーーーーーーーーーーーーーーーーーーーーーーーーモーダルーーーーーーーーーーーーーーーーーーーー-->
+    </x-slot>
+    <x-slot name="script">
+        <script>
             // ---------------------メニュー追加ボタンを押したときの処理--------------------------------------
             // ドキュメントが読み込まれた後に実行
             $(document).ready(function() {
@@ -283,7 +278,7 @@
 
 
             // ----------------------------------------削除Ajax--------------------------------------------
-        </script> 
-        </x-slot> 
-        
-        </x-base-layout>
+        </script>
+    </x-slot>
+
+</x-base-layout>

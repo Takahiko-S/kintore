@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('order');
             $table->integer('weight')->nullable();
             $table->integer('reps')->nullable();
+            $table->text('memo')->nullable();
             $table->timestamps();
         });
     }

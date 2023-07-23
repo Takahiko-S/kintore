@@ -28,7 +28,7 @@ class TodayMenusController extends Controller
 
     public function todayUpdate(Request $request, string $id)
     {
-        dd($request);
+        //dd($request);
         $menu = Menu::findOrFail($id);
         $menu->name = $request->name;
 
@@ -36,10 +36,13 @@ class TodayMenusController extends Controller
         foreach ($request->menu_exercises as $menuExerciseData) {
             $menuExercise = MenuExercise::find($menuExerciseData['id']);
 
-            if ($menuExercise !== null) {
-                // 既存のメニューエクササイズを更新
+            // 既存のメニューエクササイズを更新
+            if ($menuExercise !== null) { //
                 $menuExercise->reps = $menuExerciseData['reps'];
                 $menuExercise->weight = $menuExerciseData['weight'];
+                if (isset($menuExerciseData['memo'])) {
+                    $menuExercise->memo = $menuExerciseData['memo'];
+                }
                 $menuExercise->save();
             } else {
                 // 新しいメニューエクササイズを追加
@@ -48,6 +51,9 @@ class TodayMenusController extends Controller
                 $newMenuExercise->exercise_id = $menuExerciseData['exercise_id'];
                 $newMenuExercise->reps = $menuExerciseData['reps'];
                 $newMenuExercise->weight = $menuExerciseData['weight'];
+                if (isset($menuExerciseData['memo'])) {
+                    $newMenuExercise->memo = $menuExerciseData['memo'];
+                }
                 $menu->load('menuExercises');
                 $newMenuExercise->order = count($menu->menuExercises) + 1; // assuming order indicates the number of sets
                 $newMenuExercise->save();

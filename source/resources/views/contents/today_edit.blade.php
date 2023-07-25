@@ -55,6 +55,9 @@
 
                 <!-- メニュー編集部分 -->
                 @foreach ($menu->menuExercises as $index => $menuExercise)
+                    @php
+                        dump($menuExercise->order);
+                    @endphp
                     <div class="exercise-block" data-exercise-id="{{ $menuExercise->id }}">
                         <!-- 種目を囲むdiv -->
                         <h3 class="text-start mt-3">{{ $menuExercise->exercise->name }}</h3>
@@ -70,31 +73,37 @@
                                     </tr>
                                 </thead>
 
-                                <!-- データ部分 -->
-                                <tbody>
-                                    <tr class="menu-row text-center">
-                                        <input type="hidden" name="menu_exercises[{{ $index }}][id]"
-                                            value="{{ $menuExercise->id }}">
-                                        <input type="hidden" name="menu_exercises[{{ $index }}][exercise_id]"
-                                            value="{{ $menuExercise->exercise->id }}">
-                                        <td>
-                                            <span class="set-number">{{ $menuExercise->order }}</span>
-                                            <input type="hidden" name="menu_exercises[{{ $index }}][order]"
-                                                value="{{ $menuExercise->order }}" class="set-number">
-                                        </td>
 
-                                        <td>
-                                            <input type="number" name="menu_exercises[{{ $index }}][reps]"
-                                                value="{{ $menuExercise->reps }}" class="form-control text-center">
-                                            <!-- 回数 -->
-                                        </td>
-                                        <td>
-                                            <input type="number" name="menu_exercises[{{ $index }}][weight]"
-                                                value="{{ $menuExercise->weight }}" class="form-control text-center">
-                                            <!-- 重量 -->
-                                        </td>
-                                    </tr>
-                                </tbody>
+                                <!-- データ部分 -->
+                                @foreach ($menuExercise->order as $setIndex => $set)
+                                    <tbody>
+                                        <tr class="menu-row text-center">
+                                            <input type="hidden" name="menu_exercises[{{ $index }}][id]"
+                                                value="{{ $menuExercise->id }}">
+                                            <input type="hidden"
+                                                name="menu_exercises[{{ $index }}][exercise_id]"
+                                                value="{{ $menuExercise->exercise->id }}">
+                                            <td>
+                                                <span class="set-number">{{ $menuExercise->order }}</span>
+                                                <input type="hidden" name="menu_exercises[{{ $index }}][order]"
+                                                    value="{{ $menuExercise->order }}" class="set-number">
+                                            </td>
+
+                                            <td>
+                                                <input type="number" name="menu_exercises[{{ $index }}][reps]"
+                                                    value="{{ $menuExercise->reps }}" class="form-control text-center">
+                                                <!-- 回数 -->
+                                            </td>
+                                            <td>
+                                                <input type="number"
+                                                    name="menu_exercises[{{ $index }}][weight]"
+                                                    value="{{ $menuExercise->weight }}"
+                                                    class="form-control text-center">
+                                                <!-- 重量 -->
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                @endforeach
                             </table>
                         </div>
 

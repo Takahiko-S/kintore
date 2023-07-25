@@ -21,7 +21,9 @@ services:
       - ./source:/var/www/html
       - ./php/vhost.conf:/etc/apache2/conf-enabled/vhost.conf
     ports:
-      - "8080:80"
+      - "8082:80"
+    depends_on:
+      - db
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: "laravel-phpmyadmin"
@@ -32,5 +34,7 @@ services:
     ports:
       - "8081:80"
     links:
+      - db
+    depends_on:
       - db
 

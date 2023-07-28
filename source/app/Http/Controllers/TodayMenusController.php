@@ -28,7 +28,7 @@ class TodayMenusController extends Controller
 
     public function todayUpdate(Request $request, string $id)
     {
-        //dd($request);
+        //dd($request->all());
         $menu = Menu::findOrFail($id);
         $menu->name = $request->name;
 
@@ -55,7 +55,7 @@ class TodayMenusController extends Controller
                     $newMenuExercise->memo = $menuExerciseData['memo'];
                 }
                 $menu->load('menuExercises');
-                $newMenuExercise->order = count($menu->menuExercises) + 1; // assuming order indicates the number of sets
+                $newMenuExercise->set = count($menu->menuExercises) + 1; // assuming set indicates the number of sets
                 $newMenuExercise->save();
             }
         }
@@ -85,7 +85,7 @@ class TodayMenusController extends Controller
 
         // Save the data
         foreach ($exerciseIds as $exerciseId) {
-            $menu->exercises()->attach($exerciseId, ['order' => 1]);
+            $menu->exercises()->attach($exerciseId, ['set' => 1]);
         }
 
         // Redirect to the menu detail page

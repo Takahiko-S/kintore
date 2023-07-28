@@ -25,8 +25,7 @@
                     <div class="col-12 mt-3">
                         <div class="row">
                             <div class="col-6">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal" id="modal_bt">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" id="modal_bt">
                                     種目追加
                                 </button>
                             </div>
@@ -43,79 +42,72 @@
 
                 <div class="col-md-6 mt-3">
                     @if ($menu->menuExercises->isEmpty())
-                        <div class="col-md-6 mt-3">
-                            <h4>メニュー名</h4>
-                            <input type="text" name="name" value="{{ $menu->name }}" class="form-control">
-                        </div>
-                        <h4 text-center>メニューが登録されていません。</h4>
-                    @else
+                    <div class="col-md-6 mt-3">
                         <h4>メニュー名</h4>
                         <input type="text" name="name" value="{{ $menu->name }}" class="form-control">
+                    </div>
+                    <h4 text-center>メニューが登録されていません。</h4>
+                    @else
+                    <h4>メニュー名</h4>
+                    <input type="text" name="name" value="{{ $menu->name }}" class="form-control">
                 </div>
 
                 <!-- メニュー編集部分 -->
                 @foreach ($menu->menuExercises as $index => $menuExercise)
-                    <div class="exercise-block" data-exercise-id="{{ $menuExercise->id }}">
-                        <!-- 種目を囲むdiv -->
-                        <h3 class="text-start mt-3">{{ $menuExercise->exercise->name }}</h3>
+                <div class="exercise-block" data-exercise-id="{{ $menuExercise->id }}">
+                    <!-- 種目を囲むdiv -->
+                    <h3 class="text-start mt-3">{{ $menuExercise->exercise->name }}</h3>
 
-                        <div class="form-group">
-                            <table class="table table-bordered">
-                                <!-- ラベル部分 -->
-                                <thead>
-                                    <tr>
-                                        <th class="col-1 col-md-1 text-center" style="font-size: 0.8em;">セット</th>
-                                        <th class="col-1 col-md-1 text-center">回数</th>
-                                        <th class="col-1 col-md-1 text-center">重量 (kg)</th>
-                                    </tr>
-                                </thead>
+                    <div class="form-group">
+                        <table class="table table-bordered">
+                            <!-- ラベル部分 -->
+                            <thead>
+                                <tr>
+                                    <th class="col-1 col-md-1 text-center" style="font-size: 0.8em;">セット</th>
+                                    <th class="col-1 col-md-1 text-center">回数</th>
+                                    <th class="col-1 col-md-1 text-center">重量 (kg)</th>
+                                </tr>
+                            </thead>
 
-                                <!-- データ部分 -->
-                                <tbody>
-                                    <tr class="menu-row text-center">
-                                        <input type="hidden" name="menu_exercises[{{ $index }}][id]"
-                                            value="{{ $menuExercise->id }}">
-                                        <input type="hidden" name="menu_exercises[{{ $index }}][exercise_id]"
-                                            value="{{ $menuExercise->exercise->id }}">
-                                        <td>
-                                            <span class="set-number">{{ $menuExercise->order }}</span>
-                                            <input type="hidden" name="menu_exercises[{{ $index }}][order]"
-                                                value="{{ $menuExercise->order }}" class="set-number">
-                                        </td>
+                            <!-- データ部分 -->
+                            <tbody>
+                                <tr class="menu-row text-center">
+                                    <input type="hidden" name="menu_exercises[{{ $index }}][id]" value="{{ $menuExercise->id }}">
+                                    <input type="hidden" name="menu_exercises[{{ $index }}][exercise_id]" value="{{ $menuExercise->exercise->id }}">
+                                    <td>
+                                        <span class="set-number">{{ $menuExercise->set }}</span>
+                                        <input type="hidden" name="menu_exercises[{{ $index }}][set]" value="{{ $menuExercise->set }}" class="set-number">
+                                    </td>
 
-                                        <td>
-                                            <input type="number" name="menu_exercises[{{ $index }}][reps]"
-                                                value="{{ $menuExercise->reps }}" class="form-control text-center">
-                                            <!-- 回数 -->
-                                        </td>
-                                        <td>
-                                            <input type="number" name="menu_exercises[{{ $index }}][weight]"
-                                                value="{{ $menuExercise->weight }}" class="form-control text-center">
-                                            <!-- 重量 -->
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="form-group mt-3">
-                            <label for="memo">メモ:</label>
-                            <textarea class="form-control" rows="2" name="menu_exercises[{{ $index }}][memo]" rows="3">{{ $menuExercise->memo }}</textarea>
-                        </div>
-                        <div class="text-center mt-3 row">
-                            <div class="col-6">
-                                <button type="button" class="btn btn-primary w-75 add-menu"
-                                    data-exercise-id="{{ $menuExercise->id }}">セット追加</button>
-                            </div>
-                            <div class="col-6">
-                                <button type="button" class="btn btn-danger w-75 delete-button"
-                                    data-id="{{ $menuExercise->id }}">
-                                    <i class="fas fa-times-circle"></i>
-                                </button>
-                            </div>
-
-                        </div>
+                                    <td>
+                                        <input type="number" name="menu_exercises[{{ $index }}][reps]" value="{{ $menuExercise->reps }}" class="form-control text-center">
+                                        <!-- 回数 -->
+                                    </td>
+                                    <td>
+                                        <input type="number" name="menu_exercises[{{ $index }}][weight]" value="{{ $menuExercise->weight }}" class="form-control text-center">
+                                        <!-- 重量 -->
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
+
+                    <div class="form-group mt-3">
+                        <label for="memo">メモ:</label>
+                        <textarea class="form-control" rows="2" name="menu_exercises[{{ $index }}][memo]" rows="3">{{ $menuExercise->memo }}</textarea>
+                    </div>
+                    <div class="text-center mt-3 row">
+                        <div class="col-6">
+                            <button type="button" class="btn btn-primary w-75 add-menu" data-exercise-id="{{ $menuExercise->id }}">セット追加</button>
+                        </div>
+                        <div class="col-6">
+                            <button type="button" class="btn btn-danger w-75 delete-button" data-id="{{ $menuExercise->id }}">
+                                <i class="fas fa-times-circle"></i>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
                 @endforeach
                 @endif
 
@@ -124,8 +116,7 @@
                     <div class="col-12 mt-3">
                         <div class="row">
                             <div class="col-6">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal" id="modal_bt">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" id="modal_bt">
                                     種目追加
                                 </button>
                             </div>
@@ -163,21 +154,19 @@
                             <input type="hidden" name="menu_id" value="{{ $menu->id }}">
 
                             @foreach ($exercises as $body_part => $exercises_in_body_part)
-                                <div>
-                                    <h5>{{ $body_part }}</h5>
-                                    <div class="d-flex flex-wrap justify-content-start">
-                                        @foreach ($exercises_in_body_part as $exercise)
-                                            <div class="form-check m-2">
-                                                <input class="form-check-input" type="checkbox"
-                                                    value="{{ $exercise->id }}" id="exercise{{ $exercise->id }}"
-                                                    name="selectedExercises[]">
-                                                <label class="form-check-label" for="exercise{{ $exercise->id }}">
-                                                    {{ $exercise->name }}
-                                                </label>
-                                            </div>
-                                        @endforeach
+                            <div>
+                                <h5>{{ $body_part }}</h5>
+                                <div class="d-flex flex-wrap justify-content-start">
+                                    @foreach ($exercises_in_body_part as $exercise)
+                                    <div class="form-check m-2">
+                                        <input class="form-check-input" type="checkbox" value="{{ $exercise->id }}" id="exercise{{ $exercise->id }}" name="selectedExercises[]">
+                                        <label class="form-check-label" for="exercise{{ $exercise->id }}">
+                                            {{ $exercise->name }}
+                                        </label>
                                     </div>
+                                    @endforeach
                                 </div>
+                            </div>
                             @endforeach
 
 
@@ -233,7 +222,7 @@
                     // 新しい行の回数、重量、メモの入力欄をリセット
                     newRow.find(
                         // 'input[name^="menu_exercises"][name$="[reps]"], input[name^="menu_exercises"][name$="[weight]"], input[name^="menu_exercises"][name$="[memo]"]'
-                        'input[name^="menu_exercises"][name$="[order]"], input[name^="menu_exercises"][name$="[reps]"], input[name^="menu_exercises"][name$="[weight]"], input[name^="menu_exercises"][name$="[memo]"]'
+                        'input[name^="menu_exercises"][name$="[set]"], input[name^="menu_exercises"][name$="[reps]"], input[name^="menu_exercises"][name$="[weight]"], input[name^="menu_exercises"][name$="[memo]"]'
                     ).val('');
                     // 新しい行に'new-row'クラスを追加
                     newRow.addClass('new-row');
@@ -244,8 +233,8 @@
                     // 新しい行のセット番号を更新
                     newRow.find('.set-number').text(newSetNumber);
 
-                    // 新しい行の順番（order）の値を更新
-                    newRow.find('input[name^="menu_exercises"][name$="[order]"]').val(newSetNumber);
+                    // 新しい行の順番（set）の値を更新
+                    newRow.find('input[name^="menu_exercises"][name$="[set]"]').val(newSetNumber);
                     // 新しい行をtbodyに追加
                     newRow.appendTo(exerciseBlock.find('tbody'));
                 });

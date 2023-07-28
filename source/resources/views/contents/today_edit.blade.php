@@ -78,9 +78,9 @@
                                         <input type="hidden" name="menu_exercises[{{ $index }}][exercise_id]"
                                             value="{{ $menuExercise->exercise->id }}">
                                         <td>
-                                            <span class="set-number">{{ $menuExercise->order }}</span>
-                                            <input type="hidden" name="menu_exercises[{{ $index }}][order]"
-                                                value="{{ $menuExercise->order }}" class="set-number">
+                                            <span class="set-number">{{ $menuExercise->set }}</span>
+                                            <input type="hidden" name="menu_exercises[{{ $index }}][set]"
+                                                value="{{ $menuExercise->set }}" class="set-number">
                                         </td>
 
                                         <td>
@@ -220,20 +220,20 @@
                     });
                     newRow.find('input[name^="menu_exercises"][name$="[id]"]').val('new');
                     newRow.find(
-                        'input[name^="menu_exercises"][name$="[order]"], input[name^="menu_exercises"][name$="[reps]"], input[name^="menu_exercises"][name$="[weight]"], input[name^="menu_exercises"][name$="[memo]"]'
+                        'input[name^="menu_exercises"][name$="[set]"], input[name^="menu_exercises"][name$="[reps]"], input[name^="menu_exercises"][name$="[weight]"], input[name^="menu_exercises"][name$="[memo]"]'
                     ).val('');
                     newRow.addClass('new-row');
 
 
                     // var lastSetNumberText = exerciseBlock.find('.menu-row:last .set-number').text().trim();
                     //var matches = lastSetNumberText.match(/\d+$/);
-                    var lastSetNumber = parseInt(exerciseBlock.find('.menu-row:last input[name$="[order]"]')
+                    var lastSetNumber = parseInt(exerciseBlock.find('.menu-row:last input[name$="[set]"]')
                         .val(), 10) || 0;
                     var newSetNumber = isNaN(lastSetNumber) ? 1 : lastSetNumber + 1;
                     console.log(lastSetNumber);
                     console.log(newSetNumber);
                     newRow.find('.set-number').text(newSetNumber);
-                    newRow.find('input[name^="menu_exercises"][name$="[order]"]').val(newSetNumber);
+                    newRow.find('input[name^="menu_exercises"][name$="[set]"]').val(newSetNumber);
                     newRow.appendTo(exerciseBlock.find('tbody'));
                 });
             });

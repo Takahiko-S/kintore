@@ -20,6 +20,7 @@ class Menu_exercisesTableSeeder extends Seeder
             'set' => 1,
             'reps' => 3,
             'weight' => 50,
+            'index' => 1,
         ]);
 
         MenuExercise::create([
@@ -28,43 +29,16 @@ class Menu_exercisesTableSeeder extends Seeder
             'set' => 1,
             'reps' => 4,
             'weight' => 60,
-        ]);
-        MenuExercise::create([
-            'menu_id' => 1,
-            'exercise_id' => 5,
-            'set' => 1,
-            'reps' => 3,
-            'weight' => 50,
+            'index' => 2,
         ]);
 
-        MenuExercise::create([
-            'menu_id' => 1,
-            'exercise_id' => 6,
-            'set' => 1,
-            'reps' => 4,
-            'weight' => 60,
-        ]);
-        MenuExercise::create([
-            'menu_id' => 1,
-            'exercise_id' => 7,
-            'set' => 1,
-            'reps' => 3,
-            'weight' => 50,
-        ]);
-
-        MenuExercise::create([
-            'menu_id' => 1,
-            'exercise_id' => 8,
-            'set' => 1,
-            'weight' => 60,
-            'reps' => 10,
-        ]);
         MenuExercise::create([
             'menu_id' => 2,
             'exercise_id' => 1,
             'set' => 1,
             'weight' => 60,
             'reps' => 10,
+            'index' => 1,
         ]);
         MenuExercise::create([
             'menu_id' => 2,
@@ -72,6 +46,7 @@ class Menu_exercisesTableSeeder extends Seeder
             'set' => 1,
             'weight' => 50,
             'reps' => 10,
+            'index' => 2,
         ]);
 
         MenuExercise::create([
@@ -80,6 +55,7 @@ class Menu_exercisesTableSeeder extends Seeder
             'set' => 1,
             'weight' => 60,
             'reps' => 10,
+            'index' => 3,
         ]);
 
 
@@ -89,6 +65,7 @@ class Menu_exercisesTableSeeder extends Seeder
             'set' => 1,
             'weight' => 50,
             'reps' => 10,
+            'index' => 4,
         ]);
 
         MenuExercise::create([
@@ -97,6 +74,7 @@ class Menu_exercisesTableSeeder extends Seeder
             'set' => 1,
             'weight' => 60,
             'reps' => 10,
+            'index' => 5,
         ]);
 
 

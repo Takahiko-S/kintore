@@ -18,8 +18,8 @@ class TodayMenusController extends Controller
 
     public function todayEdit(string $id)
     {
-        //
-        $menu = Menu::find($id);;
+
+        $menu = Menu::find($id);
         $exercises = Exercises::all()->groupBy('body_part');
 
         return view('contents.today_edit', compact('menu', 'exercises'));
@@ -32,30 +32,29 @@ class TodayMenusController extends Controller
         $menu = Menu::findOrFail($id);
         $menu->name = $request->name;
 
-
         foreach ($request->menu_exercises as $menuExerciseData) {
-            $menuExercise = MenuExercise::find($menuExerciseData['id']);
-
-            // 既存のメニューエクササイズを更新
-            if ($menuExercise !== null) { //
-                $menuExercise->reps = $menuExerciseData['reps'];
-                $menuExercise->weight = $menuExerciseData['weight'];
-                if (isset($menuExerciseData['memo'])) {
-                    $menuExercise->memo = $menuExerciseData['memo'];
+            if (isset($menuExerciseData['id']) && $menuExerciseData['id'] != 'new') {
+                // Existing menu exercise update
+                $menuExercise = MenuExercise::find($menuExerciseData['id']);
+                if ($menuExercise !== null) {
+                    $menuExercise->reps = $menuExerciseData['reps'];
+                    $menuExercise->weight = $menuExerciseData['weight'];
+                    if (isset($menuExerciseData['memo'])) {
+                        $menuExercise->memo = $menuExerciseData['memo'];
+                    }
+                    $menuExercise->save();
                 }
-                $menuExercise->save();
             } else {
-                // 新しいメニューエクササイズを追加
+                // Add new menu exercise
                 $newMenuExercise = new MenuExercise();
                 $newMenuExercise->menu_id = $menu->id;
                 $newMenuExercise->exercise_id = $menuExerciseData['exercise_id'];
+                $newMenuExercise->set = $menuExerciseData['set'];
                 $newMenuExercise->reps = $menuExerciseData['reps'];
                 $newMenuExercise->weight = $menuExerciseData['weight'];
                 if (isset($menuExerciseData['memo'])) {
                     $newMenuExercise->memo = $menuExerciseData['memo'];
                 }
-                $menu->load('menuExercises');
-                $newMenuExercise->set = count($menu->menuExercises) + 1; // assuming set indicates the number of sets
                 $newMenuExercise->save();
             }
         }
@@ -68,12 +67,22 @@ class TodayMenusController extends Controller
 
     public function todayDestroy(string $id)
     {
-
+        // 送られてきた id から対応する MenuExercise を取得
         $menuExercise = MenuExercise::find($id);
+
+        // 取得した MenuExercise の menu_id と exercise_id を取得
         $menu_id = $menuExercise->menu_id;
-        $menuExercise->delete();
+        $exercise_id = $menuExercise->exercise_id;
+
+        // 同じ menu_id を持ち、同じ exercise_id を持つすべての MenuExercise を削除
+        MenuExercise::where('menu_id', $menu_id)
+            ->where('exercise_id', $exercise_id)
+            ->delete();
+
         return response()->json(['menu_id' => $menu_id]);  // JSONレスポンスを返す
     }
+
+
     public function addExercises(Request $request)
     {
         // Get the request data
@@ -82,10 +91,11 @@ class TodayMenusController extends Controller
 
         // Retrieve the specific Menu
         $menu = Menu::find($menuId);
-
+        $currentExercisesCount = $menu->exercises()->count();
         // Save the data
         foreach ($exerciseIds as $exerciseId) {
-            $menu->exercises()->attach($exerciseId, ['set' => 1]);
+            $menu->exercises()->attach($exerciseId, ['set' => 1, 'index' => $currentExercisesCount]);
+            $currentExercisesCount++; // Increment the index for the next exercise
         }
 
         // Redirect to the menu detail page

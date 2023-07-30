@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('set');
             $table->integer('weight')->nullable();
             $table->integer('reps')->nullable();
+            $table->integer('index')->default(0);
             $table->text('memo')->nullable();
             $table->timestamps();
         });

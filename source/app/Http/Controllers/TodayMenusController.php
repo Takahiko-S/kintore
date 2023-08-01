@@ -3,19 +3,92 @@
 namespace App\Http\Controllers;
 
 use App\Models\Exercises;
+use App\Models\History;
 use App\Models\Menu;
 use App\Models\MenuExercise;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Session;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TodayMenusController extends Controller
+
 {
+
+    //-------------------------------------------------------------------------------------------------------------------------------------------
+
     public function todayMenu()
     {
-        //withメソッドを使うことで、リレーション先のデータを一度のクエリで取得できるため、menuExecises::とかかなくてＯＫ
-        $menu = Menu::with('menuExercises.exercise')->orderBy('id', 'asc')->first();
+        $user_id = Auth::id();
+        $menus = Menu::with(['menuExercises.exercise', 'menuExercises.histories' => function ($query) use ($user_id) {
+            $query->where('user_id', $user_id);
+        }])->orderBy('id', 'asc')->get();
+        $exercises = Exercises::all()->groupBy('body_part');
+        $menu = $menus->first(function ($m) use ($user_id) {
+            return !$m->isCompleted($user_id);
+        });
+
+        if (!$menu) {
+            Session::flash('message', 'メニューがありません。');
+        }
+
         return view('contents.today_menu', compact('menu'));
     }
 
+
+
+
+    public function completeMenu(Request $request, $id)
+    {
+        //dd($request->all());
+        $completed_exercises = $request->input('completed_exercises');
+
+        // Here we need to retrieve the menu using the passed $id
+        $menu = Menu::find($id);
+
+        foreach ($completed_exercises as $completed_exercise) {
+
+            // For each completed exercise, we get the MenuExercise instance
+            $menuExercise = MenuExercise::find($completed_exercise);
+            //dd($menuExercise);
+            // Now, we can use $menu and $menuExercise
+            History::create([
+                'user_id' => Auth::id(),
+                'menu_id' => $menu->id,
+                'exercise_id' => $menuExercise->exercise_id,
+                'menu_exercise_id' => $completed_exercise,
+                'exercise_date' => Carbon::now(),
+                'menu_name' => $menu->name,
+                'exercise_name' => $menuExercise->exercise->name,
+                'sets' => $menuExercise->set,
+                'weight' => $menuExercise->weight,
+                'reps' => $menuExercise->reps,
+                'memo' => '', // Update this based on your requirements
+                'is_completed' => false,
+            ]);
+        }
+
+        // Redirect to the current menu page
+        return redirect()->route('today_menu', ['id' => $id]);
+    }
+
+    public function todayComplete($id)
+    {
+        $menu = Menu::find($id);
+
+        foreach ($menu->menuExercises as $menuExercise) {
+            History::where('menu_exercise_id', $menuExercise->id)
+                ->where('is_completed', false)
+                ->update(['is_completed' => true]);
+        }
+
+        return redirect()->route('today_menu', ['id' => $id]);
+    }
+
+
+
+    //-------------------------------------------------------------------------------------------------------------------------------------------
     public function todayEdit(string $id)
     {
 

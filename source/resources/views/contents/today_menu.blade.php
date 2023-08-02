@@ -33,6 +33,12 @@
                 </div>
                 <p>{{ $menu->description }}</p>
                 <h2>Exercises</h2>
+                @if (session('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
                 <form action="{{ route('complete_menu', ['id' => $menu->id]) }}" method="POST">
                     @csrf
                     @foreach ($menu->menuExercises->groupBy('exercise_id') as $exerciseId => $menuExercisesForExercise)

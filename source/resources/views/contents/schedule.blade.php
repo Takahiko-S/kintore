@@ -173,12 +173,18 @@
                             </div>
                             <div class="mb-3">
                                 <label for="bodyPart" class="form-label">部位</label>
-                                <select class="form-select" id="bodyPart" name="body_part" required>
-                                    @foreach ($body_parts as $body_part)
-                                        <option value="{{ $body_part }}">{{ $body_part }}</option>
-                                    @endforeach
-                                </select>
+                                <div class="input-group">
+                                    <select class="form-select" id="bodyPart" name="body_part" aria-label="選択する部位">
+                                        <option selected>既存の部位を選択</option>
+                                        @foreach ($body_parts as $body_part)
+                                            <option value="{{ $body_part }}">{{ $body_part }}</option>
+                                        @endforeach
+                                    </select>
+                                    <input type="text" class="form-control" id="newBodyPart" name="new_body_part"
+                                        placeholder="新しい部位を追加" aria-label="新しい部位">
+                                </div>
                             </div>
+
                             <button type="submit" class="btn btn-primary">種目追加</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
                         </form>

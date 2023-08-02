@@ -43,6 +43,9 @@ class TodayMenusController extends Controller
     {
         //dd($request->all());
         $completed_exercises = $request->input('completed_exercises');
+        if (!$completed_exercises) { // Make sure $completed_exercises is not null
+            return redirect()->route('today_menu', ['id' => $id])->with('error', 'No exercises selected.');
+        }
 
         // Here we need to retrieve the menu using the passed $id
         $menu = Menu::find($id);

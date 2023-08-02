@@ -125,11 +125,20 @@ class ScheduleController extends Controller
 
     public function addNewExercise(Request $request)
     {
-        //dd($request->all());
         //exerciseテーブルにデータを保存
         $exercise = new Exercises();
         $exercise->name = $request->exercise_name;
-        $exercise->body_part = $request->body_part;
+
+        // ユーザーが新しい部位を追加した場合、それを使用
+        if (!empty($request->new_body_part)) {
+            $exercise->body_part = $request->new_body_part;
+
+            // 新しい部位を部位テーブルに追加するロジックが必要かもしれません
+        } else {
+            // そうでなければ、選択された既存の部位を使用
+            $exercise->body_part = $request->body_part;
+        }
+
         $exercise->save();
 
         // Redirect to the menu detail page

@@ -68,7 +68,7 @@
 
 
                 <div class="col-10 mx-auto mt-5">
-                    <a href="{{ route('schedule.index') }}" class="btn btn-primary btn-lg w-100 ">筋トレスケジュール</a>
+                    <a href="{{ route('schedule_index') }}" class="btn btn-primary btn-lg w-100 ">筋トレスケジュール</a>
                 </div>
 
 

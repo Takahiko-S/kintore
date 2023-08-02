@@ -101,10 +101,21 @@ class TodayMenusController extends Controller
 
     public function todayUpdate(Request $request, string $id)
     {
-        //dd($request->all());
         $menu = Menu::findOrFail($id);
         $menu->name = $request->name;
 
+        // 送信された全てのメニューエクササイズのIDを配列に格納
+        $menuExerciseIds = array_filter(
+            array_column($request->menu_exercises, 'id'),
+            function ($id) {
+                return $id !== 'new';
+            }
+        );
+
+        // データベースから現在のメニューに関連する全てのメニューエクササイズを取得し、それらが上記の配列に存在しない場合、それらを削除
+        MenuExercise::where('menu_id', $id)->whereNotIn('id', $menuExerciseIds)->delete();
+
+        // 以下は既存のコードを維持
         foreach ($request->menu_exercises as $menuExerciseData) {
             if (isset($menuExerciseData['id']) && $menuExerciseData['id'] != 'new') {
                 // Existing menu exercise update
@@ -136,6 +147,7 @@ class TodayMenusController extends Controller
         session()->flash('message', 'メニューが更新されました');
         return redirect()->route('today_menu');
     }
+
 
 
     public function todayDestroy(string $id)

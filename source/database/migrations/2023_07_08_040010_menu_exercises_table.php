@@ -17,9 +17,10 @@ return new class extends Migration
             $table->foreign('menu_id')->references('id')->on('menus')->onDelete('cascade');
             $table->unsignedBigInteger('exercise_id');
             $table->foreign('exercise_id')->references('id')->on('exercises');
-            $table->integer('order');
+            $table->integer('set');
             $table->integer('weight')->nullable();
             $table->integer('reps')->nullable();
+            $table->integer('index')->default(0);
             $table->text('memo')->nullable();
             $table->timestamps();
         });

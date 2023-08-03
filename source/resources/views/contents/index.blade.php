@@ -54,13 +54,14 @@
                                 <tr>
                             @endif
                             @php
-                                $isExerciseDate = in_array(['month' => $data['month'], 'day' => $data['day']], $exerciseDates);
+                                $isExerciseDate = in_array(['year' => $year, 'month' => $data['month'], 'day' => $data['day']], $exerciseDates);
+                                
                             @endphp
 
 
                             @if ($isExerciseDate)
                                 <td class="text-center table-striped completed-exercise">
-                                    <a href="{{ route('show_history', ['date' => "$year-$month-{$data['day']}"]) }}"
+                                    <a href="{{ route('show_history', ['date' => "{$data['year']}-{$data['month']}-{$data['day']}"]) }}"
                                         style="display: block; height: 100%; color: inherit; text-decoration: none;">
                                         {{ $data['day'] }}
                                     </a>

@@ -17,12 +17,13 @@ class ScheduleController extends Controller
      */
     public function schedule_index()
     {
-        $menus = Menu::all();
+        $menus = Menu::where('user_id', Auth::id())->orderBy('order')->get();
+        $menuExists = Menu::where('user_id', Auth::id())->count() > 0;
         $exercises = Exercises::all()->groupBy('body_part');
         $body_parts = Exercises::select('body_part')->distinct()->get()->pluck('body_part');
 
         //dd($menus);
-        return view('contents.schedule', compact('menus', 'exercises', 'body_parts'));
+        return view('contents.schedule', compact('menus', 'exercises', 'body_parts', 'menuExists'));
     }
 
 
@@ -101,11 +102,26 @@ class ScheduleController extends Controller
 
     public function addMenu(Request $request)
     {
-        //dd($request->all());
-        //menuテーブルにデータを保存
+        // dd($request->all());
         $menu = new Menu();
         $menu->user_id = Auth::id();
         $menu->name = $request->menu_name;
+
+        // Get the position where the new menu should be inserted
+        $insertPosition = $request->insert_position ? intval($request->insert_position) + 1 : Menu::where('user_id', Auth::id())->count() + 1;
+        // Get all the menus after the insert position
+        $menusToUpdate = Menu::where('user_id', Auth::id())
+            ->where('order', '>=', $insertPosition)
+            ->get();
+
+        // Update the order of the affected menus
+        foreach ($menusToUpdate as $menuToUpdate) {
+            $menuToUpdate->order++;
+            $menuToUpdate->save();
+        }
+
+        // Now we can set the order of the new menu and save it
+        $menu->order = $insertPosition;
         $menu->save();
 
         //menu_exerciseテーブルにデータを保存
@@ -120,7 +136,7 @@ class ScheduleController extends Controller
         }
 
         // Redirect to the menu detail page
-        return redirect()->route('today_edit', ['id' => $menu->id]);
+        return redirect()->route('schedule_index', ['id' => $menu->id]);
     }
 
     public function addNewExercise(Request $request)

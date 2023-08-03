@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('name');
             $table->text('description')->nullable();
+            $table->integer('order')->default(0);
             $table->timestamps();
         });
     }

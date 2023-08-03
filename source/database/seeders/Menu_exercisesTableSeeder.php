@@ -37,7 +37,7 @@ class Menu_exercisesTableSeeder extends Seeder
             'set' => 3,
             'reps' => 4,
             'weight' => 60,
-            'index' => 2,
+            'index' => 3,
         ]);
 
         MenuExercise::create([
@@ -55,7 +55,7 @@ class Menu_exercisesTableSeeder extends Seeder
             'set' => 2,
             'weight' => 60,
             'reps' => 10,
-            'index' => 1,
+            'index' => 2,
         ]);
         MenuExercise::create([
             'menu_id' => 2,

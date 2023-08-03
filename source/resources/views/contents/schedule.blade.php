@@ -9,62 +9,86 @@
     <x-slot name="main">
         <div class="container">
             <h2 class="mt-4 text-center">筋トレスケジュール</h2>
-            <div class="col-12 text-end mt-5">
-                <button type="button" class="btn btn-primary d-inline-block ms-5 w-25" data-bs-toggle="modal"
-                    data-bs-target="#newModal">メニュー追加
-                </button>
-            </div>
+
             @if (session('message'))
                 <div class="alert alert-success">
                     {{ session('message') }}
                 </div>
             @endif
+
+
+            @if (!$menuExists)
+                <button type="button" class="btn btn-primary w-25 add-menu-button" data-bs-toggle="modal"
+                    data-bs-target="#newModal">
+                    メニュー追加
+                </button>
+            @endif
+
+
+
             @foreach ($menus as $menuIndex => $menu)
-                <div class="row">
+                <div class="row" data-order="{{ $menu->order }}">
                     <div class="col-12 text-start">
                         <h4 class="mt-3">メニュー名：{{ $menu->name }}</h4>
                     </div>
-                </div>
 
-                @if ($menu->menuExercises)
-                    @php
-                        $groupedMenuExercises = $menu->menuExercises->groupBy('exercise.name');
-                        $workoutNo = 1;
-                    @endphp
-                    <table class="table" style="table-layout: fixed;">
-                        <thead>
-                            <tr>
-                                <th class="text-center" style="width: 20%;">Ｎｏ</th>
-                                <th class="text-center" style="width: 50%;">種目名</th>
-                                <th style="width: 12.5%;">重量</th>
-                                <th style="width: 12.5%;">回数</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($groupedMenuExercises as $exerciseName => $menuExercises)
-                                @foreach ($menuExercises as $exerciseIndex => $menuExercise)
-                                    <tr>
-                                        <th class="text-center" scope="row">
-                                            {{ $exerciseIndex == 0 ? $workoutNo++ : '' }}</th>
-                                        <td class="text-center" style="width: 50%;">{{ $menuExercise->exercise->name }}
-                                        </td>
-                                        <td class="text-center" style="width: 12.5%;">{{ $menuExercise->weight }}</td>
-                                        <td class="text-center" style="width: 12.5%;">{{ $menuExercise->reps }}</td>
-                                    </tr>
+                    @if ($menu->menuExercises)
+                        @php
+                            $groupedMenuExercises = $menu->menuExercises->groupBy('exercise.name');
+                            $workoutNo = 1;
+                        @endphp
+                        <table class="table" style="table-layout: fixed;">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" style="width: 20%;">Ｎｏ</th>
+                                    <th class="text-center" style="width: 50%;">種目名</th>
+                                    <th style="width: 12.5%;">重量</th>
+                                    <th style="width: 12.5%;">回数</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($groupedMenuExercises as $exerciseName => $menuExercises)
+                                    @foreach ($menuExercises as $exerciseIndex => $menuExercise)
+                                        <tr>
+                                            <th class="text-center" scope="row">
+                                                {{ $exerciseIndex == 0 ? $workoutNo++ : '' }}</th>
+                                            <td class="text-center" style="width: 50%;">
+                                                {{ $menuExercise->exercise->name }}
+                                            </td>
+                                            <td class="text-center" style="width: 12.5%;">{{ $menuExercise->weight }}
+                                            </td>
+                                            <td class="text-center" style="width: 12.5%;">{{ $menuExercise->reps }}</td>
+                                        </tr>
+                                    @endforeach
                                 @endforeach
-                            @endforeach
-                        </tbody>
-                    </table>
-                @else
-                    <p class="mt-2">このメニューには内容が登録されていません。</p>
-                @endif
-                <div class="col-12 text-center mb-5">
-                    <a href="{{ route('schedule.edit', $menu->id) }}"
-                        class="btn btn-primary d-inline-block w-25 me-5">編集</a>
-                    <button type="button" class="btn btn-danger d-inline-block ms-5 w-25" data-bs-toggle="modal"
-                        data-bs-target="#deleteModal" data-menu-id="{{ $menu->id }}"
-                        data-menu-name="{{ $menu->name }}">削除
-                    </button>
+                            </tbody>
+                        </table>
+                    @else
+                        <p class="mt-2">このメニューには内容が登録されていません。</p>
+                    @endif
+                    <div class="row text-center mb-5">
+                        <div class="col">
+                            <div style="max-width: 80%; margin: auto;">
+                                <a href="{{ route('schedule.edit', $menu->id) }}" class="btn btn-primary w-100">編集</a>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div style="max-width: 80%; margin: auto;">
+                                <button type="button" class="btn btn-primary w-100 add-menu-button"
+                                    data-bs-toggle="modal" data-bs-target="#newModal"
+                                    data-menu-index="{{ $menuIndex }}">メニュー追加
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div style="max-width: 80%; margin: auto;">
+                                <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal"
+                                    data-bs-target="#deleteModal" data-menu-id="{{ $menu->id }}"
+                                    data-menu-name="{{ $menu->name }}">削除
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             @endforeach
         </div>
@@ -104,6 +128,7 @@
                     <div class="modal-body">
                         <form id="exercises-form" action="{{ route('add_menu') }}" method="POST">
                             @csrf
+                            <input type="hidden" id="insert-position" name="insert_position">
                             <div class="mb-3">
                                 <label for="menuName" class="form-label">メニュー名</label>
                                 <input type="text" class="form-control" id="menuname" name="menu_name" required>
@@ -296,6 +321,41 @@
                 if (window.location.hash === '#newMenu') {
                     $('#newModal').modal('show');
                 }
+            });
+
+
+            //ーーーーーーーーーーーーーーーーーーーーーーーーーーーーorderを取得するーーーーーーーーーーーーーーーーーーーーーーーーーー
+
+            // ドキュメントが読み込まれた後にJavaScriptコードを実行します
+            document.addEventListener('DOMContentLoaded', (event) => {
+                // 「メニュー追加」ボタンがクリックされたときのイベントリスナーを追加します
+                document.querySelectorAll('.add-menu-button').forEach((button) => {
+                    button.addEventListener('click', (event) => {
+                        // Set the position of this menu as the insert position
+                        const insertPosition = parseInt(button.dataset.menuIndex) +
+                            1; // add 1 to insert in between
+                        console.log(insertPosition);
+                        document.querySelector('#insert-position').value = insertPosition;
+
+                        // ボタンの親要素の親要素（メニューのdiv）のorder値を取得します
+                        const menuDiv = event.target.parentElement.parentElement;
+                        const order = menuDiv.getAttribute('data-order') ||
+                            '0'; // Use '0' as a default value
+
+                        // ここでorder値を使って何かを行うことができます
+                        console.log('The order of the clicked menu is ' + order);
+                    });
+                });
+
+
+                // メニュー作成ボタンがクリックされたときのイベントリスナーを追加します
+                document.querySelector('#add-exercises').addEventListener('click', (event) => {
+                    const insertPosition = document.querySelector('#insert-position').value;
+                    if (typeof insertPosition === 'undefined' || insertPosition === '') {
+                        // If the insert position is not defined, default to '0'
+                        document.querySelector('#insert-position').value = '0';
+                    }
+                });
             });
         </script>
     </x-slot> </x-base-layout>

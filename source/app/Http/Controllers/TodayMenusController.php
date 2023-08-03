@@ -21,7 +21,7 @@ class TodayMenusController extends Controller
     public function todayMenu()
     {
         $user_id = Auth::id();
-        $menus = Menu::with(['menuExercises.exercise', 'menuExercises.histories' => function ($query) use ($user_id) {
+        $menus = Menu::where('user_id', $user_id)->with(['menuExercises.exercise', 'menuExercises.histories' => function ($query) use ($user_id) {
             $query->where('user_id', $user_id);
         }])->orderBy('id', 'asc')->get();
         $exercises = Exercises::all()->groupBy('body_part');

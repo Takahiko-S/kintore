@@ -266,10 +266,36 @@
                     newExerciseModal.show();
                 });
 
-                // When the new exercise modal is hidden, re-open the new menu modal
-                $('#newExerciseModal').on('hidden.bs.modal', function() {
-                    newMenuModal.show();
+                // AJAXで種目を追加する
+                $('#new-exercise-form').submit(function(e) {
+                    e.preventDefault();
+
+                    $.ajax({
+                        url: $(this).attr('action'),
+                        method: 'POST',
+                        data: $(this).serialize(),
+                        success: function(response) {
+                            // データが成功したら、新しいエクササイズモーダルを非表示にする
+                            $('#newExerciseModal').modal('hide');
+
+                            // URLのハッシュを設定する
+                            window.location.hash = '#newMenu';
+
+                            // ここでリロードします
+                            location.reload();
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            // Handle errors here
+                            console.error('Error: ' + textStatus, errorThrown);
+                        }
+                    });
                 });
+
+                // ページのリロードが完了したら、「新メニュー作成」のモーダルを表示する
+                // URLのハッシュに基づいて判定する
+                if (window.location.hash === '#newMenu') {
+                    $('#newModal').modal('show');
+                }
             });
         </script>
     </x-slot> </x-base-layout>

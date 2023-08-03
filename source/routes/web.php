@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/add_menu', [ScheduleController::class, 'addMenu'])->name('add_menu');
     Route::post('/add_new_exercise', [ScheduleController::class, 'addNewExercise'])->name('add_new_exercise');
     Route::post('/add_exercise', [ScheduleController::class, 'addExercise'])->name('add_exercise');
+    Route::get('/get_new_exercise', [ScheduleController::class, 'getNewExercises'])->name('get_new_exercise');
 });
 
 //Route::get('/dashboard', function () {return view('dashboard');})->middleware(['auth', 'verified'])->name('dashboard');

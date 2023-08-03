@@ -141,9 +141,20 @@ class ScheduleController extends Controller
 
         $exercise->save();
 
-        // Redirect to the menu detail page
-        return redirect()->route('schedule_index');
+        return response()->json([
+            'status' => 'success',
+            'message' => 'New exercise added successfully.'
+        ]);
     }
+    public function getNewExercises() //モーダルで更新された新しいエクササイズを取得
+    {
+        // Exercisesテーブルからすべてのエクササイズを取得
+        $exercises = Exercises::all();
+
+        // エクササイズのリストをJSON形式で返す
+        return response()->json($exercises);
+    }
+
 
     public function addExercise(Request $request)
     {

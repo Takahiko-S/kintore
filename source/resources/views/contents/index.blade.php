@@ -9,10 +9,12 @@
             }
 
             .calendar-cell {
-                background-color: red !inportant;
+                background-color: red !important;
                 /* 背景色を淡い青に設定 */
+            }
 
-
+            .completed-exercise {
+                background-color: rgb(220, 106, 18) !important;
             }
         </style>
     </x-slot>
@@ -51,7 +53,27 @@
                             @if ($index % 7 == 0)
                                 <tr>
                             @endif
-                            <td class="text-center table-strped">{{ $data['date'] }}</td>
+                            @php
+                                $isExerciseDate = in_array(['month' => $data['month'], 'day' => $data['day']], $exerciseDates);
+                            @endphp
+
+
+                            @if ($isExerciseDate)
+                                <td class="text-center table-striped completed-exercise">
+                                    <a href="{{ route('show_history', ['date' => "$year-$month-{$data['day']}"]) }}"
+                                        style="display: block; height: 100%; color: inherit; text-decoration: none;">
+                                        {{ $data['day'] }}
+                                    </a>
+                                </td>
+                            @else
+                                <td class="text-center table-striped">
+                                    {{ $data['day'] }}
+                                </td>
+                            @endif
+
+
+
+
                             @if ($index % 7 == 6)
                                 </tr>
                             @endif

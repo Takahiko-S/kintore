@@ -22,7 +22,9 @@ Route::get('/', [HistoryController::class, 'top'])->name('history.top');
 
 Route::middleware('auth')->group(function () {
     Route::get('/index', [HistoryController::class, 'index'])->name('history.index');
-    Route::resource('history', HistoryController::class);
+    Route::get('/show_history{date}', [HistoryController::class, 'showHistory'])->name('show_history');
+
+
 
     Route::get('/today_menu', [TodayMenusController::class, 'todayMenu'])->name('today_menu');
     Route::get('/today_edit/{id}', [TodayMenusController::class, 'todayEdit'])->name('today_edit');

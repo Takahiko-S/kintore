@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\History;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HistoryController extends Controller
 {
@@ -37,57 +37,35 @@ class HistoryController extends Controller
             $d = explode('-', $data['date']);
             $data['date'] = intval($d[2]);
         }
+        $startDate = "$year-$month-01";
+        $endDate = date('Y-m-t', strtotime($startDate));
 
-        return view('contents.index', compact('calendar_data', 'year', 'month', 'prevMonth', 'nextMonth', 'prevYear', 'nextYear'));
+        $exerciseDates = DB::table('histories')
+            ->select('exercise_date')
+            ->whereBetween('exercise_date', [$startDate, $endDate])
+            ->distinct()
+            ->pluck('exercise_date')
+            ->map(function ($date) {
+                return [
+                    'month' => intval(date('m', strtotime($date))),
+                    'day' => intval(date('d', strtotime($date)))
+                ];
+            })
+            ->toArray();
+
+
+        return view('contents.index', compact('calendar_data', 'year', 'month', 'prevMonth', 'nextMonth', 'prevYear', 'nextYear', 'exerciseDates'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
     /**
      * Display the specified resource.
      */
-    public function show(History $history)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(History $history)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, History $history)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(History $history)
-    {
-        //
-    }
 
     private function makeCalendarData($year, $month)
     {
@@ -105,20 +83,31 @@ class HistoryController extends Controller
         }
 
         for ($i = $start; $i > 0; $i--) {
-            //print $date->format('Y-m-d') . $youbi[$date->format('w')] . "<br>";
-
-            array_push($calendar_array, array('date' => $date->format('Y-m-d'), 'week' => $youbi[$date->format('w')]));
+            array_push($calendar_array, array(
+                'date' => $date->format('Y-m-d'),
+                'day' => intval($date->format('d')), // 'day' key added
+                'week' => $youbi[$date->format('w')],
+                'month' => intval($date->format('m'))
+            ));
             $date->modify('+1 day');
         }
 
         while ($date->format('m') == $month) {
-            //print $date->format('Y-m-d') . $youbi[$date->format('w')] . "<br>";
-            array_push($calendar_array, array('date' => $date->format('Y-m-d'), 'week' => $youbi[$date->format('w')]));
+            array_push($calendar_array, array(
+                'date' => $date->format('Y-m-d'),
+                'day' => intval($date->format('d')), // 'day' key added
+                'week' => $youbi[$date->format('w')],
+                'month' => intval($date->format('m'))
+            ));
             $date->modify('+1 day');
         }
-        while ($date->format('w') != 0) { //0になるまで回す一週間区切り
-            // print $date->format('Y-m-d') . $youbi[$date->format('w')] . "<br>";
-            array_push($calendar_array, array('date' => $date->format('Y-m-d'), 'week' => $youbi[$date->format('w')]));
+        while ($date->format('w') != 0) {
+            array_push($calendar_array, array(
+                'date' => $date->format('Y-m-d'),
+                'day' => intval($date->format('d')), // 'day' key added
+                'week' => $youbi[$date->format('w')],
+                'month' => intval($date->format('m'))
+            ));
             $date->modify('+1 day');
         }
         //print $date->format('Y-m-d') . "<br>";
@@ -129,5 +118,15 @@ class HistoryController extends Controller
     public function top()
     {
         return view('layouts.index');
+    }
+
+
+    public function showHistory($date)
+    {
+        $history = DB::table('histories')
+            ->where('exercise_date', $date)
+            ->get();
+        //dd($history);
+        return view('contents.history', compact('history', 'date'));
     }
 }

@@ -26,7 +26,7 @@ class ScheduleController extends Controller
         return view('contents.schedule', compact('menus', 'exercises', 'body_parts', 'menuExists'));
     }
 
-
+    //--------------------------------------------//セット追加などの更新---------------------------------------
     public function scheduleUpdate(Request $request, string $id)
     {
         $menu = Menu::findOrFail($id);
@@ -76,7 +76,7 @@ class ScheduleController extends Controller
         return redirect()->route('schedule_index');
     }
 
-
+    //--------------------------------------------//編集画面遷移---------------------------------------
     public function schedule_Edit(string $id)
     {
         //
@@ -86,7 +86,7 @@ class ScheduleController extends Controller
         return view('contents.schedule_edit', compact('menu', 'exercises'));
     }
 
-
+    //--------------------------------------------メニュー削除ーーーーーーーーーー---------------------------------------
     public function menuDelete(Request $request)
     {
 
@@ -99,33 +99,29 @@ class ScheduleController extends Controller
 
         return response()->json(['status' => 'success']);
     }
-
+    //-------------------------------------------------------メニュー追加-------------------------------------------------------------------------
     public function addMenu(Request $request)
     {
-        // dd($request->all());
-        $menu = new Menu();
-        $menu->user_id = Auth::id();
-        $menu->name = $request->menu_name;
+        $menu = new Menu(); // 新しいMenuインスタンスを作成します
 
-        // Get the position where the new menu should be inserted
+        $menu->user_id = Auth::id();  // ユーザーIDを認証済みユーザーのIDで設定します
+        $menu->name = $request->menu_name;        // メニューの名前をリクエストから取得します
+
+        // 新しいメニューを挿入する位置を取得 もしリクエストに位置が指定されていなければ、ユーザーの既存のメニューの数+1を使用します
         $insertPosition = $request->insert_position ? intval($request->insert_position) + 1 : Menu::where('user_id', Auth::id())->count() + 1;
-        // Get all the menus after the insert position
-        $menusToUpdate = Menu::where('user_id', Auth::id())
+
+        $menusToUpdate = Menu::where('user_id', Auth::id()) // 挿入位置以降のすべてのメニューを取得します
             ->where('order', '>=', $insertPosition)
             ->get();
-
-        // Update the order of the affected menus
-        foreach ($menusToUpdate as $menuToUpdate) {
+        foreach ($menusToUpdate as $menuToUpdate) {     // 影響を受けるメニューの順序を更新します
             $menuToUpdate->order++;
             $menuToUpdate->save();
         }
 
-        // Now we can set the order of the new menu and save it
-        $menu->order = $insertPosition;
+        $menu->order = $insertPosition; // 新しいメニューの順序を設定し、それを保存します
         $menu->save();
 
-        //menu_exerciseテーブルにデータを保存
-        if ($request->has('selectedExercises')) {
+        if ($request->has('selectedExercises')) {        //menu_exerciseテーブルにデータを保存
             foreach ($request->selectedExercises as $exerciseId) {
                 $menu_exercise = new MenuExercise();
                 $menu_exercise->menu_id = $menu->id;
@@ -135,10 +131,32 @@ class ScheduleController extends Controller
             }
         }
 
-        // Redirect to the menu detail page
-        return redirect()->route('schedule_index', ['id' => $menu->id]);
+        return redirect()->route('schedule_index', ['id' => $menu->id]);        // メニュー詳細ページにリダイレクトします
     }
 
+
+    //-------------------------------------------------------筋トレ種目追加-------------------------------------------------------------------------
+    public function scheduleAddExercise(Request $request) //スケジュール編集画面の種目追加
+    {
+        dd($request->all());
+        // リクエストデータを取得
+        $exerciseIds = $request->input('selectedExercises');
+        $menuId = $request->input('menu_id');
+
+        // 特定のメニューを取得
+        $menu = Menu::find($menuId);
+        $currentExercisesCount = $menu->exercises()->count();
+        // データを保存
+        foreach ($exerciseIds as $exerciseId) {
+            // メニューに運動を追加（attach）し、セット数を1、インデックスを現在の運動の数に設定
+            $menu->exercises()->attach($exerciseId, ['set' => 1, 'index' => $currentExercisesCount]);
+            $currentExercisesCount++; // 次の運動のためにインデックスを増加
+        }
+
+        // メニュー詳細ページにリダイレクト
+        return redirect()->route('today_edit', ['id' => $menu->id]);
+    }
+    //-------------------------------------------------------新規種目追加-------------------------------------------------------------------------
     public function addNewExercise(Request $request)
     {
         //exerciseテーブルにデータを保存
@@ -149,7 +167,7 @@ class ScheduleController extends Controller
         if (!empty($request->new_body_part)) {
             $exercise->body_part = $request->new_body_part;
 
-            // 新しい部位を部位テーブルに追加するロジックが必要かもしれません
+            // 新しい部位を部位テーブルに保存
         } else {
             // そうでなければ、選択された既存の部位を使用
             $exercise->body_part = $request->body_part;
@@ -170,24 +188,19 @@ class ScheduleController extends Controller
         // エクササイズのリストをJSON形式で返す
         return response()->json($exercises);
     }
-
-
-    public function addExercise(Request $request)
+    //---------------------------ーーーーーー------メニュー並び替え----------------ーーー------------------------
+    public function updateMenuOrder(Request $request)
     {
-        // Get the request data
-        $exerciseIds = $request->input('selectedExercises');
-        $menuId = $request->input('menu_id');
+        $order = $request->input('order');
 
-        // Retrieve the specific Menu
-        $menu = Menu::find($menuId);
-        $currentExercisesCount = $menu->exercises()->count();
-        // Save the data
-        foreach ($exerciseIds as $exerciseId) {
-            $menu->exercises()->attach($exerciseId, ['set' => 1, 'index' => $currentExercisesCount]);
-            $currentExercisesCount++; // Increment the index for the next exercise
+        foreach ($order as $id => $newOrder) {
+            $menu = Menu::find($id);
+            if ($menu) {
+                $menu->order = $newOrder;
+                $menu->save();
+            }
         }
 
-        // Redirect to the menu detail page
-        return redirect()->route('today_edit', ['id' => $menu->id]);
+        return response()->json(['status' => 'success']);
     }
 }

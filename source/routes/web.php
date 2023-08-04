@@ -43,8 +43,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/new_schedule', [ScheduleController::class, 'newSchedule'])->name('new_schedule');
     Route::post('/add_menu', [ScheduleController::class, 'addMenu'])->name('add_menu');
     Route::post('/add_new_exercise', [ScheduleController::class, 'addNewExercise'])->name('add_new_exercise');
-    Route::post('/add_exercise', [ScheduleController::class, 'addExercise'])->name('add_exercise');
+    Route::post('/schedule_add_exercise', [ScheduleController::class, 'scheduleAddExercise'])->name('schedule_add_exercise');
     Route::get('/get_new_exercise', [ScheduleController::class, 'getNewExercises'])->name('get_new_exercise');
+    Route::post('/update_menu_order', [ScheduleController::class, 'updateMenuOrder'])->name('update_menu_order');
 });
 
 //Route::get('/dashboard', function () {return view('dashboard');})->middleware(['auth', 'verified'])->name('dashboard');

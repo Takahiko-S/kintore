@@ -2,7 +2,19 @@
     <x-slot name="title">筋トレスケジュール</x-slot>
     <x-slot name="css">
         <style>
-            /* 必要なCSSをここに書く */
+            .add-menu-button {
+                font-size: 15px;
+                /* Adjust size as needed */
+                color: white;
+                /* Adjust color as needed */
+                background-color: green;
+                /* Adjust color as needed */
+                border: none;
+                /* Adjust as needed */
+                padding: 3px 6px;
+                /* Adjust padding as needed */
+                cursor: pointer;
+            }
         </style>
     </x-slot>
 
@@ -26,71 +38,97 @@
 
 
 
-            @foreach ($menus as $menuIndex => $menu)
-                <div class="row" data-order="{{ $menu->order }}">
-                    <div class="col-12 text-start">
-                        <h4 class="mt-3">メニュー名：{{ $menu->name }}</h4>
-                    </div>
+            <div class="accordion accordion-flush" id="accordionFlushExample">
+                @foreach ($menus as $menuIndex => $menu)
+                    <div class="accordion-item" data-order="{{ $menu->order }}" data-id="{{ $menu->id }}">
+                        <h2 class="accordion-header row">
+                            <div class="col-11">
+                                <button class="accordion-button collapsed pe-0" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#flush-collapse{{ $menuIndex }}" aria-expanded="false"
+                                    aria-controls="flush-collapse{{ $menuIndex }}"> {{ $menu->name }}
+                                </button>
+                            </div>
+                            <div class="col-1 text-center  px-0">
+                                <button type="button" class="btn btn-primary add-menu-button" data-bs-toggle="modal"
+                                    data-bs-target="#newModal" data-menu-index="{{ $menuIndex }}">＋
+                                </button>
+                            </div>
 
-                    @if ($menu->menuExercises)
-                        @php
-                            $groupedMenuExercises = $menu->menuExercises->groupBy('exercise.name');
-                            $workoutNo = 1;
-                        @endphp
-                        <table class="table" style="table-layout: fixed;">
-                            <thead>
-                                <tr>
-                                    <th class="text-center" style="width: 20%;">Ｎｏ</th>
-                                    <th class="text-center" style="width: 50%;">種目名</th>
-                                    <th style="width: 12.5%;">重量</th>
-                                    <th style="width: 12.5%;">回数</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($groupedMenuExercises as $exerciseName => $menuExercises)
-                                    @foreach ($menuExercises as $exerciseIndex => $menuExercise)
-                                        <tr>
-                                            <th class="text-center" scope="row">
-                                                {{ $exerciseIndex == 0 ? $workoutNo++ : '' }}</th>
-                                            <td class="text-center" style="width: 50%;">
-                                                {{ $menuExercise->exercise->name }}
-                                            </td>
-                                            <td class="text-center" style="width: 12.5%;">{{ $menuExercise->weight }}
-                                            </td>
-                                            <td class="text-center" style="width: 12.5%;">{{ $menuExercise->reps }}</td>
-                                        </tr>
-                                    @endforeach
-                                @endforeach
-                            </tbody>
-                        </table>
-                    @else
-                        <p class="mt-2">このメニューには内容が登録されていません。</p>
-                    @endif
-                    <div class="row text-center mb-5">
-                        <div class="col">
-                            <div style="max-width: 80%; margin: auto;">
-                                <a href="{{ route('schedule.edit', $menu->id) }}" class="btn btn-primary w-100">編集</a>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div style="max-width: 80%; margin: auto;">
-                                <button type="button" class="btn btn-primary w-100 add-menu-button"
-                                    data-bs-toggle="modal" data-bs-target="#newModal"
-                                    data-menu-index="{{ $menuIndex }}">メニュー追加
-                                </button>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div style="max-width: 80%; margin: auto;">
-                                <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal"
-                                    data-bs-target="#deleteModal" data-menu-id="{{ $menu->id }}"
-                                    data-menu-name="{{ $menu->name }}">削除
-                                </button>
+                        </h2>
+
+                        <div id="flush-collapse{{ $menuIndex }}" class="accordion-collapse collapse"
+                            data-bs-parent="#accordionFlushExample">
+                            <div class="accordion-body">
+                                <div class="col-12 text-start">
+                                    @if ($menu->menuExercises)
+                                        @php
+                                            $groupedMenuExercises = $menu->menuExercises->groupBy('exercise.name');
+                                            $workoutNo = 1;
+                                        @endphp
+                                        <table class="table" style="table-layout: fixed;">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center" style="width: 20%;">Ｎｏ</th>
+                                                    <th class="text-center" style="width: 50%;">種目名</th>
+                                                    <th style="width: 12.5%;">重量</th>
+                                                    <th style="width: 12.5%;">回数</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($groupedMenuExercises as $exerciseName => $menuExercises)
+                                                    @foreach ($menuExercises as $exerciseIndex => $menuExercise)
+                                                        <tr>
+                                                            <th class="text-center" scope="row">
+                                                                {{ $exerciseIndex == 0 ? $workoutNo++ : '' }}</th>
+                                                            <td class="text-center" style="width: 50%;">
+                                                                {{ $menuExercise->exercise->name }}
+                                                            </td>
+                                                            <td class="text-center" style="width: 12.5%;">
+                                                                {{ $menuExercise->weight }}
+                                                            </td>
+                                                            <td class="text-center" style="width: 12.5%;">
+                                                                {{ $menuExercise->reps }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    @else
+                                        <p class="mt-2">このメニューには内容が登録されていません。</p>
+                                    @endif
+                                    <div class="row text-center mb-5">
+                                        <!-- Buttons here -->
+                                        <div class="col">
+                                            <div style="max-width: 80%; margin: auto;">
+                                                <a href="{{ route('schedule.edit', $menu->id) }}"
+                                                    class="btn btn-primary w-100">編集</a>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div style="max-width: 80%; margin: auto;">
+                                                <button type="button" class="btn btn-primary w-100 add-menu-button"
+                                                    data-bs-toggle="modal" data-bs-target="#newModal"
+                                                    data-menu-index="{{ $menuIndex }}">メニュー追加
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div style="max-width: 80%; margin: auto;">
+                                                <button type="button" class="btn btn-danger w-100"
+                                                    data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                                    data-menu-id="{{ $menu->id }}"
+                                                    data-menu-name="{{ $menu->name }}">削除
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            @endforeach
+                @endforeach
+            </div>
+
         </div>
 
 
@@ -123,12 +161,18 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="newModalLabel">新メニュー作成</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+
                     </div>
                     <div class="modal-body">
                         <form id="exercises-form" action="{{ route('add_menu') }}" method="POST">
                             @csrf
                             <input type="hidden" id="insert-position" name="insert_position">
+                            <div class="col-12 text-end">
+                                <button type="button" class="btn btn-primary mx-auto" data-bs-toggle="modal"
+                                    data-bs-target="#newExerciseModal" id="new-exercises">種目を追加</button>
+                            </div>
                             <div class="mb-3">
                                 <label for="menuName" class="form-label">メニュー名</label>
                                 <input type="text" class="form-control" id="menuname" name="menu_name" required>
@@ -159,8 +203,7 @@
                                         data-bs-dismiss="modal">閉じる</button>
                                     <button type="submit" class="btn btn-info" id="add-exercises">メニュー作成</button>
                                 </div>
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                    data-bs-target="#newExerciseModal" id="new-exercises">新しい種目を追加する</button>
+
 
                             </div>
                         </form>
@@ -224,11 +267,44 @@
 
 
 
-        <!--ーーーーーーーーーーーーーーーーーーーーーーーーーー新しい種目追加のモーダルーーーーーーーーーーーーーーーーーーーーーーーーーーーー-->
     </x-slot>
 
     <x-slot name="script">
         <script>
+            //-------------------------------メニューのソート------------------------------------------
+            $(function() {
+                var accordion = $("#accordionFlushExample");
+
+                // SortableJSの初期化
+                var sortable = new Sortable(accordion[0], {
+                    animation: 150,
+                    handle: '.accordion-header', // ドラッグハンドルとして使用する要素
+                    onEnd: function(evt) {
+                        var order = {};
+                        $('.accordion-item').each(function(index) {
+                            order[$(this).data('id')] = index;
+                        });
+                        console.log(order);
+                        // Ajaxリクエストで新しい順序をサーバーに送信
+                        $.ajax({
+                            url: '{{ route('update_menu_order') }}', // 適切なURLに変更してください
+                            type: 'POST',
+                            data: {
+                                order: order,
+                                _token: $('meta[name="csrf-token"]').attr('content') // CSRF token
+                            },
+                            success: function(data) {
+                                console.log(data)
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                console.error("Ajax request failed: ", textStatus, ", ",
+                                    errorThrown);
+                            }
+                        });
+                    }
+                });
+            });
+            //ーーーーーーーーーーーーーーーーーーーーーーーーーー新しい種目追加のモーダルーーーーーーーーーーーーーーーーーーーーーーーーーーーー-->
             $('#deleteModal').on('show.bs.modal', function(event) {
                 var button = $(event.relatedTarget) // Button that triggered the modal
                 var menuId = button.data('menu-id') // Extract info from data-* attributes

@@ -21,6 +21,8 @@
     <link href="{{ asset('jquery-ui-1.13.2/jquery-ui.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/lightbox.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/bootstrap-icons.min.css') }}" rel="stylesheet">
+
 
 
 
@@ -31,6 +33,9 @@
     <script src="{{ asset('jquery-ui-1.13.2/external/jquery/jquery.js') }}"></script>
     <script src="{{ asset('jquery-ui-1.13.2/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('js/lightbox.min.js') }}"></script>
+    <script src="{{ asset('js/Sortable.min.js') }}"></script>
+
+
     {{ $css }}
 </head>
 

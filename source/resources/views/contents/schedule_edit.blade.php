@@ -181,7 +181,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="exercises-form" action="{{ route('add_exercise') }}" method="POST">
+                        <form id="exercises-form" action="{{ route('schedule_add_exercise') }}" method="POST">
                             @csrf
                             <input type="hidden" name="menu_id" value="{{ $menu->id }}">
 

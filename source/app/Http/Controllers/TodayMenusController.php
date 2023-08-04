@@ -152,7 +152,7 @@ class TodayMenusController extends Controller
     }
 
 
-
+    //ーーーーーーーーーーーーーーーーーーーーーーー削除ーーーーーーーーーーーーーーーーーーーーーーーー
     public function todayDestroy(string $id)
     {
         // 送られてきた id から対応する MenuExercise を取得
@@ -170,8 +170,8 @@ class TodayMenusController extends Controller
         return response()->json(['menu_id' => $menu_id]);  // JSONレスポンスを返す
     }
 
-
-    public function addExercises(Request $request)
+    //ーーーーーーーーーーーーーーーーーーーーーーー種目追加ーーーーーーーーーーーーーーーーーーーーーーーー
+    public function addExercises(Request $request) //種目追加モーダルからの送信
     {
         // Get the request data
         $exerciseIds = $request->input('selectedExercises');

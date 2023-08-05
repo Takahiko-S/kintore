@@ -42,11 +42,15 @@
 
 
                 <div class="col-12 mt-3">
+                    @error('name')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
                     @if ($menu->menuExercises->isEmpty())
                         <div class="col-md-6 mt-3">
                             <h4>メニュー名</h4>
                             <input type="text" name="name" value="{{ $menu->name }}" class="form-control">
                         </div>
+
                         <h4 class="text-center mt-5">種目が登録されていません。</h4>
                     @else
                         <h4>メニュー名</h4>
@@ -61,6 +65,10 @@
                 @foreach ($menu->menuExercises->groupBy('exercise_id') as $exerciseId => $menuExercisesForExercise)
                     <div class="exercise-block" data-exercise-id="{{ $exerciseId }}">
                         <!-- 種目を囲むdiv -->
+
+
+
+
                         <h3 class="text-start mt-3">{{ $menuExercisesForExercise->first()->exercise->name }}</h3>
 
                         <div class="form-group">
@@ -79,6 +87,12 @@
                                         $setIndex = 0;
                                     @endphp
                                     @foreach ($menuExercisesForExercise as $menuExercise)
+                                        @error('menu_exercises.' . $globalIndex . '.weight')
+                                            <div class="alert alert-danger">{{ $message }}</div>
+                                        @enderror
+                                        @error('menu_exercises.' . $globalIndex . '.reps')
+                                            <div class="alert alert-danger">{{ $message }}</div>
+                                        @enderror
                                         <tr class="menu-row text-center">
                                             <input type="hidden" name="menu_exercises[{{ $globalIndex }}][id]"
                                                 value="{{ $menuExercise->id }}">
@@ -103,7 +117,9 @@
                                                     class="form-control text-center">
                                                 <!-- 重量 -->
                                             </td>
+
                                         </tr>
+
                                         @if ($setIndex == 0)
                                             <!-- メモを行の新たなセルに追加 -->
                                             <div class="col-12">
@@ -180,11 +196,15 @@
                         <h5 class="modal-title" id="exampleModalLabel">追加種目選択</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+                    @error('selectedExercises')
+                        <div id="selectedExercises-error" class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+
+
                     <div class="modal-body">
                         <form id="exercises-form" action="{{ route('schedule_add_exercise') }}" method="POST">
                             @csrf
                             <input type="hidden" name="menu_id" value="{{ $menu->id }}">
-
                             @foreach ($exercises as $body_part => $exercises_in_body_part)
                                 <div>
                                     <h5>{{ $body_part }}</h5>
@@ -204,6 +224,7 @@
                             @endforeach
 
 
+
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
                             <button type="submit" class="btn btn-info" id="add-exercises">種目追加</button>
 
@@ -214,6 +235,14 @@
 
 
         </div>
+
+        @if (session('showModal'))
+            <script>
+                $(document).ready(function() {
+                    $('#exampleModal').modal('show');
+                });
+            </script>
+        @endif
 
 
 
@@ -290,7 +319,8 @@
                     });
                 }
             });
-            // ----------------------------------------削除Ajax--------------------------------------------
+
+            // ----------------------------------------------------------------------------------
         </script>
 
 

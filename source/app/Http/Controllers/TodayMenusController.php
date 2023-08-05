@@ -21,6 +21,8 @@ class TodayMenusController extends Controller
 
     //-------------------------------------------------------------------------------------------------------------------------------------------
 
+
+
     public function todayMenu()
     {
         $user_id = Auth::id();
@@ -39,12 +41,22 @@ class TodayMenusController extends Controller
                 ->first();
         }
 
-        if (!$menu) {
+        if ($menu) {
+            // Get today's date range
+            $todayStart = Carbon::today();
+            $todayEnd = Carbon::tomorrow();
+
+            // Filter the exercises that have not been completed today
+            $menu->menuExercises = $menu->menuExercises->filter(function ($menuExercise) use ($todayStart, $todayEnd) {
+                return $menuExercise->histories->whereBetween('created_at', [$todayStart, $todayEnd])->isEmpty();
+            });
+        } else {
             Session::flash('message', 'メニューがありません。');
         }
 
         return view('contents.today_menu', compact('menu'));
     }
+
 
 
 

@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ScheduleRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Menu;
 use App\Models\Exercises;
 use App\Models\MenuExercise;
 use Database\Seeders\MenusTableSeeder;
-
+use Illuminate\Support\Facades\Validator;
 
 class ScheduleController extends Controller
 {
@@ -27,7 +28,7 @@ class ScheduleController extends Controller
     }
 
     //--------------------------------------------//セット追加などの更新---------------------------------------
-    public function scheduleUpdate(Request $request, string $id)
+    public function scheduleUpdate(ScheduleRequest $request, string $id)
     {
         $menu = Menu::findOrFail($id);
         $menu->name = $request->name;
@@ -102,6 +103,14 @@ class ScheduleController extends Controller
     //-------------------------------------------------------メニュー追加-------------------------------------------------------------------------
     public function addMenu(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'selectedExercises' => 'required|array|min:1',
+        ], [], [
+            'selectedExercises' => '選択されたエクササイズ',
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->with('showModal', 'true');
+        }
         $menu = new Menu(); // 新しいMenuインスタンスを作成します
 
         $menu->user_id = Auth::id();  // ユーザーIDを認証済みユーザーのIDで設定します
@@ -131,6 +140,7 @@ class ScheduleController extends Controller
             }
         }
 
+
         return redirect()->route('schedule_index', ['id' => $menu->id]);        // メニュー詳細ページにリダイレクトします
     }
 
@@ -138,27 +148,36 @@ class ScheduleController extends Controller
     //-------------------------------------------------------筋トレ種目追加-------------------------------------------------------------------------
     public function scheduleAddExercise(Request $request) //スケジュール編集画面の種目追加
     {
-        dd($request->all());
-        // リクエストデータを取得
+        $validator = Validator::make($request->all(), [
+            'selectedExercises' => 'required|array|min:1',
+        ], [], [
+            'selectedExercises' => '選択されたエクササイズ',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->with('showModal', 'true');
+        }
+        // Get the request data
         $exerciseIds = $request->input('selectedExercises');
         $menuId = $request->input('menu_id');
 
-        // 特定のメニューを取得
+        // Retrieve the specific Menu
         $menu = Menu::find($menuId);
         $currentExercisesCount = $menu->exercises()->count();
-        // データを保存
+        // Save the data
         foreach ($exerciseIds as $exerciseId) {
-            // メニューに運動を追加（attach）し、セット数を1、インデックスを現在の運動の数に設定
             $menu->exercises()->attach($exerciseId, ['set' => 1, 'index' => $currentExercisesCount]);
-            $currentExercisesCount++; // 次の運動のためにインデックスを増加
+            $currentExercisesCount++; // Increment the index for the next exercise
         }
 
-        // メニュー詳細ページにリダイレクト
+        // Redirect to the menu detail page
         return redirect()->route('today_edit', ['id' => $menu->id]);
     }
     //-------------------------------------------------------新規種目追加-------------------------------------------------------------------------
-    public function addNewExercise(Request $request)
+    public function addNewExercise(ScheduleRequest $request)
+
     {
+
         //exerciseテーブルにデータを保存
         $exercise = new Exercises();
         $exercise->name = $request->exercise_name;
@@ -180,6 +199,9 @@ class ScheduleController extends Controller
             'message' => 'New exercise added successfully.'
         ]);
     }
+
+
+
     public function getNewExercises() //モーダルで更新された新しいエクササイズを取得
     {
         // Exercisesテーブルからすべてのエクササイズを取得

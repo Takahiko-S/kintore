@@ -36,12 +36,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/today_complete/{id}', [TodayMenusController::class, 'todayComplete'])->name('today_complete');
 
     Route::get('/schedule', [ScheduleController::class, 'schedule_index'])->name('schedule_index');
-    Route::post('/schedule', [ScheduleController::class, 'schedule_store'])->name('schedule.store');
     Route::get('/schedule/{id}/edit', [ScheduleController::class, 'schedule_edit'])->name('schedule.edit');
     Route::patch('/schedule/{id}', [ScheduleController::class, 'scheduleUpdate'])->name('schedule_update');
     Route::post('/menu_delete', [ScheduleController::class, 'menuDelete'])->name('menu_delete');
     Route::get('/new_schedule', [ScheduleController::class, 'newSchedule'])->name('new_schedule');
     Route::post('/add_menu', [ScheduleController::class, 'addMenu'])->name('add_menu');
+    Route::get('/add_new_exercise', [ScheduleController::class, 'addNewExercise'])->name('add_new_exercise');
     Route::post('/add_new_exercise', [ScheduleController::class, 'addNewExercise'])->name('add_new_exercise');
     Route::post('/schedule_add_exercise', [ScheduleController::class, 'scheduleAddExercise'])->name('schedule_add_exercise');
     Route::get('/get_new_exercise', [ScheduleController::class, 'getNewExercises'])->name('get_new_exercise');

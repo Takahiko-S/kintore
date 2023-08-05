@@ -3,6 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use App\Rules\BodyPartValidation;
+use Illuminate\Contracts\Validation\Validator;
 
 class ScheduleRequest extends FormRequest
 {
@@ -11,7 +14,7 @@ class ScheduleRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +25,34 @@ class ScheduleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'sometimes|required|string|max:50',
+            'menu_name' => 'sometimes|required|string|max:50',
+            'menu_exercises.*.weight' => 'sometimes|required|integer|between:1,1000',
+            'menu_exercises.*.reps' => 'sometimes|required|integer|between:1,1000',
+            'menu_exercises.*.memo' => 'nullable|string|max:500',
+            'body_part' => [
+                'nullable',
+                'string',
+
+            ],
+            'new_body_part' => [
+                'nullable',
+                'string',
+                'max:10',
+
+            ],
+
+
         ];
+    }
+    public function withValidator(Validator $validator)
+    {
+        $validator->after(function ($validator) {
+            if ((!empty($this->body_part) && !empty($this->new_body_part)) ||
+                (empty($this->body_part) && empty($this->new_body_part))
+            ) {
+                $validator->errors()->add('body_part_combination', '部位は一つだけ選択するか入力してください。');
+            }
+        });
     }
 }

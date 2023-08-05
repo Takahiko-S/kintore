@@ -138,6 +138,10 @@ return [
         'menu_exercises.*.weight' => [
             'required' => '重量は必ず指定してください。',
         ],
+        'new_body_part' => [
+            'max' => '新しい部位は10文字以内です。',
+        ],
+
     ],
 
     /*

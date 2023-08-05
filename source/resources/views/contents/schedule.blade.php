@@ -170,13 +170,20 @@
                             @csrf
                             <input type="hidden" id="insert-position" name="insert_position">
                             <div class="col-12 text-end">
-                                <button type="button" class="btn btn-primary mx-auto" data-bs-toggle="modal"
+                                <button type="button" class="btn btn-primary mx-auto mb-2" data-bs-toggle="modal"
                                     data-bs-target="#newExerciseModal" id="new-exercises">種目を追加</button>
                             </div>
+
+                            @error('selectedExercises')
+                                <div id="selectedExercises-error" class="alert alert-danger">{{ $message }}
+                                </div>
+                            @enderror
                             <div class="mb-3">
                                 <label for="menuName" class="form-label">メニュー名</label>
                                 <input type="text" class="form-control" id="menuname" name="menu_name" required>
-
+                                @error('menu_name')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             @foreach ($exercises as $body_part => $exercises_in_body_part)
@@ -235,6 +242,11 @@
                     <div class="modal-body">
                         <form id="new-exercise-form" action="{{ route('add_new_exercise') }}" method="POST">
                             @csrf
+                            @error('body_part')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
+
+                            <div id="body-part-error"></div>
                             <div class="mb-3">
                                 <label for="exerciseName" class="form-label">種目名</label>
                                 <input type="text" class="form-control" id="exerciseName" name="exercise_name"
@@ -244,11 +256,13 @@
                                 <label for="bodyPart" class="form-label">部位</label>
                                 <div class="input-group">
                                     <select class="form-select" id="bodyPart" name="body_part" aria-label="選択する部位">
-                                        <option selected>既存の部位を選択</option>
+                                        <option selected value="">既存の部位を選択</option>
                                         @foreach ($body_parts as $body_part)
                                             <option value="{{ $body_part }}">{{ $body_part }}</option>
                                         @endforeach
                                     </select>
+
+
                                     <input type="text" class="form-control" id="newBodyPart" name="new_body_part"
                                         placeholder="新しい部位を追加" aria-label="新しい部位">
                                 </div>
@@ -305,7 +319,7 @@
                     }
                 });
             });
-            //ーーーーーーーーーーーーーーーーーーーーーーーーーー新しい種目追加のモーダルーーーーーーーーーーーーーーーーーーーーーーーーーーーー-->
+            //ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー削除モーダルーーーーーーーーーーーーーーーーーーーーーーーーーーーー-->
             $('#deleteModal').on('show.bs.modal', function(event) {
                 var button = $(event.relatedTarget) // Button that triggered the modal
                 var menuId = button.data('menu-id') // Extract info from data-* attributes
@@ -355,7 +369,7 @@
                     });
             }
 
-            //ーーーーーーーーーーーーーーーーーーーーーーーーーーーーモーダルが自動で閉じるファンクションーーーーーーーーーーーーーーーーーーーーーーーーーー
+            //ーーーーーーーーーーーーーーーーーーーーーーーーーーーー新しい種目を追加、モーダルが自動で閉じるファンクションーーーーーーーーーーーーーーーーーーーーーーーーーー
 
             $(document).ready(function() {
                 // Get the modals
@@ -373,7 +387,7 @@
                     e.preventDefault();
 
                     $.ajax({
-                        url: $(this).attr('action'),
+                        url: '{{ route('add_new_exercise') }}',
                         method: 'POST',
                         data: $(this).serialize(),
                         success: function(response) {
@@ -387,11 +401,29 @@
                             location.reload();
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
-                            // Handle errors here
+                            var errors = jqXHR.responseJSON.errors;
+
+                            // 特定のエラーメッセージを取得
+                            var errorMessage = "";
+
+                            if (errors.body_part_combination) {
+                                errorMessage = errors.body_part_combination[0];
+                            }
+
+                            // 他のエラーも取得可能
+                            // 例: new_body_partに関連するエラーを取得
+                            if (errors.new_body_part) {
+                                errorMessage = errors.new_body_part[0];
+                            }
+
+                            // エラーメッセージをHTMLに追加
+                            $('#body-part-error').html('<div class="alert alert-danger">' +
+                                errorMessage + '</div>');
                             console.error('Error: ' + textStatus, errorThrown);
                         }
                     });
                 });
+
 
                 // ページのリロードが完了したら、「新メニュー作成」のモーダルを表示する
                 // URLのハッシュに基づいて判定する
@@ -434,5 +466,11 @@
                     }
                 });
             });
+
+            // セッションに'showModal'がある場合、モーダルを開く
+            @if (session('showModal') == 'true')
+                var myModal = new bootstrap.Modal(document.getElementById('newModal'), {});
+                myModal.show();
+            @endif
         </script>
     </x-slot> </x-base-layout>

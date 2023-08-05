@@ -203,7 +203,6 @@
                         <form id="exercises-form" action="{{ route('add_exercise') }}" method="POST">
                             @csrf
                             <input type="hidden" name="menu_id" value="{{ $menu->id }}">
-
                             @foreach ($exercises as $body_part => $exercises_in_body_part)
                                 <div>
                                     <h5>{{ $body_part }}</h5>

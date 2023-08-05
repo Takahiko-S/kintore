@@ -15,25 +15,30 @@ class UsersTableSeeder extends Seeder
      */
     public function run(): void
     {
-        $init_users =[
+        $init_users = [
             [
                 'name' => '管理者',
                 'email' => 'webmaster@localhost.localdomain',
-                'password' => 'P@ssw0rd#2023'
+                'password' => 'P@ssw0rd#2023',
+                'last_completed_menu_id' => 0,
+                'last_finish_order' => 0
             ],
             [
                 'name' => 'テストユーザー',
                 'email' => 'test@localhost.localdomain',
-                'password' => 'P@ssw0rd#2023'
-            ], 
+                'password' => 'P@ssw0rd#2023',
+                'last_completed_menu_id' => 0,
+                'last_finish_order' => 0
+            ],
         ];
-        
-        foreach($init_users as $user){
+
+        foreach ($init_users as $user) {
             $data = new User();
             $data->name = $user['name'];
             $data->email = $user['email'];
             $data->password = Hash::make($user['password']);
+            $data->last_completed_menu_id = $user['last_completed_menu_id'];
             $data->save();
         }
-     }
+    }
 }

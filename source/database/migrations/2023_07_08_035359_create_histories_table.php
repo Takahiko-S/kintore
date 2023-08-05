@@ -24,7 +24,6 @@ return new class extends Migration
             $table->integer('weight')->comment('重量');
             $table->integer('reps')->comment('回数');
             $table->string('memo')->comment('メモ');
-            $table->boolean('is_completed')->comment('完了フラグ');
             $table->timestamps();
         });
     }

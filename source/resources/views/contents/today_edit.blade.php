@@ -42,16 +42,18 @@
 
 
                 <div class="col-12 mt-3">
+
+                    <h4>メニュー名</h4>
+                    <input type="text" name="name" value="{{ $menu->name }}" class="form-control">
+                    @error('name')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+
+
                     @if ($menu->menuExercises->isEmpty())
-                        <div class="col-md-6 mt-3">
-                            <h4>メニュー名</h4>
-                            <input type="text" name="name" value="{{ $menu->name }}" class="form-control">
-                        </div>
                         <h4 class="text-center mt-5">種目が登録されていません。</h4>
-                    @else
-                        <h4>メニュー名</h4>
-                        <input type="text" name="name" value="{{ $menu->name }}" class="form-control">
                     @endif
+
                 </div>
 
                 <!-- メニュー編集部分 -->
@@ -96,19 +98,29 @@
                                                     value="{{ $menuExercise->reps }}" class="form-control text-center">
                                                 <!-- 回数 -->
                                             </td>
+                                            @error('menu_exercises.' . $globalIndex . '.reps')
+                                                <div class="alert alert-danger">{{ $message }}</div>
+                                            @enderror
                                             <td>
                                                 <input type="number"
                                                     name="menu_exercises[{{ $globalIndex }}][weight]"
                                                     value="{{ $menuExercise->weight }}"
                                                     class="form-control text-center">
+
                                                 <!-- 重量 -->
                                             </td>
+                                            @error('menu_exercises.' . $globalIndex . '.weight')
+                                                <div class="alert alert-danger">{{ $message }}</div>
+                                            @enderror
                                         </tr>
                                         @if ($setIndex == 0)
-                                            <!-- メモを行の新たなセルに追加 -->
+                                            <!-- メモ -->
                                             <div class="col-12">
                                                 <label for="memo">メモ:</label>
                                                 <textarea class="form-control" rows="2" name="menu_exercises[{{ $globalIndex }}][memo]" rows="3">{{ $menuExercise->memo }}</textarea>
+                                                @error('menu_exercises.' . $globalIndex . '.memo')
+                                                    <div class="alert alert-danger">{{ $message }}</div>
+                                                @enderror
                                             </div>
                                             @php
                                                 $setIndex++;
@@ -180,6 +192,13 @@
                         <h5 class="modal-title" id="exampleModalLabel">追加種目選択</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+                    @error('selectedExercises')
+                        <div id="selectedExercises-error" class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+
+
+
+
                     <div class="modal-body">
                         <form id="exercises-form" action="{{ route('add_exercise') }}" method="POST">
                             @csrf
@@ -194,6 +213,7 @@
                                                 <input class="form-check-input" type="checkbox"
                                                     value="{{ $exercise->id }}" id="exercise{{ $exercise->id }}"
                                                     name="selectedExercises[]">
+
                                                 <label class="form-check-label" for="exercise{{ $exercise->id }}">
                                                     {{ $exercise->name }}
                                                 </label>
@@ -202,6 +222,7 @@
                                     </div>
                                 </div>
                             @endforeach
+
 
 
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
@@ -216,6 +237,13 @@
         </div>
 
 
+        @if (session('showModal'))
+            <script>
+                $(document).ready(function() {
+                    $('#exampleModal').modal('show');
+                });
+            </script>
+        @endif
 
 
 
@@ -290,7 +318,7 @@
                     });
                 }
             });
-            // ----------------------------------------削除Ajax--------------------------------------------
+            // ----------------------------------------種目追加モーダルエラーの再表示--------------------------------------------
         </script>
 
 

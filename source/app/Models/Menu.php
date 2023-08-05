@@ -19,11 +19,10 @@ class Menu extends Model
         return $this->belongsToMany(Exercises::class, 'menu_exercises', 'menu_id', 'exercise_id');
     }
     // In your Menu model
-
     public function isCompleted($userId)
     {
-        return $this->menuExercises()->whereHas('histories', function ($query) use ($userId) {
-            $query->where('user_id', $userId)->where('is_completed', true);
-        })->count() == $this->menuExercises()->count();
+        return $this->menuExercises->every(function ($menuExercise) use ($userId) {
+            return !$menuExercise->histories->where('user_id', $userId)->isEmpty();
+        });
     }
 }

@@ -21,6 +21,6 @@ class History extends Model
         'weight',
         'reps',
         'memo',
-        'is_completed'
+
     ];
 }

@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TodayMenusRequest;
 use App\Models\Exercises;
 use App\Models\History;
 use App\Models\Menu;
 use App\Models\MenuExercise;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class TodayMenusController extends Controller
 
@@ -21,13 +24,20 @@ class TodayMenusController extends Controller
     public function todayMenu()
     {
         $user_id = Auth::id();
-        $menus = Menu::where('user_id', $user_id)->with(['menuExercises.exercise', 'menuExercises.histories' => function ($query) use ($user_id) {
-            $query->where('user_id', $user_id);
-        }])->orderBy('id', 'asc')->get();
-        $exercises = Exercises::all()->groupBy('body_part');
-        $menu = $menus->first(function ($m) use ($user_id) {
-            return !$m->isCompleted($user_id);
-        });
+        $user = User::find($user_id);
+
+        // Find the next menu
+        $menu = Menu::where('user_id', $user_id)
+            ->where('order', '>', $user->last_finish_order)
+            ->orderBy('order', 'asc')
+            ->first();
+
+        if (!$menu) {
+            // If there is no next menu, display the first menu
+            $menu = Menu::where('user_id', $user_id)
+                ->orderBy('order', 'asc')
+                ->first();
+        }
 
         if (!$menu) {
             Session::flash('message', 'メニューがありません。');
@@ -35,6 +45,7 @@ class TodayMenusController extends Controller
 
         return view('contents.today_menu', compact('menu'));
     }
+
 
 
 
@@ -68,7 +79,6 @@ class TodayMenusController extends Controller
                 'weight' => $menuExercise->weight,
                 'reps' => $menuExercise->reps,
                 'memo' => '', // Update this based on your requirements
-                'is_completed' => false,
             ]);
         }
 
@@ -76,18 +86,37 @@ class TodayMenusController extends Controller
         return redirect()->route('today_menu', ['id' => $id]);
     }
 
+
     public function todayComplete($id)
     {
+        // Update the last completed menu for the user
+        $user = Auth::user();
         $menu = Menu::find($id);
+        $user->last_completed_menu_id = $id;
+        $user->last_finish_order = $menu->order;
+        $user->save();
 
-        foreach ($menu->menuExercises as $menuExercise) {
-            History::where('menu_exercise_id', $menuExercise->id)
-                ->where('is_completed', false)
-                ->update(['is_completed' => true]);
+        // Find the next menu
+        $nextMenu = Menu::where('user_id', Auth::id())
+            ->where('order', '>', $menu->order)
+            ->orderBy('order', 'asc')
+            ->first();
+
+        if ($nextMenu) {
+            // If there is a next menu, redirect to it
+            return redirect()->route('today_menu', ['id' => $nextMenu->id]);
+        } else {
+            // If there is no next menu, redirect to the first menu
+            $firstMenu = Menu::where('user_id', Auth::id())
+                ->orderBy('order', 'asc')
+                ->first();
+            return redirect()->route('today_menu', ['id' => $firstMenu->id]);
         }
-
-        return redirect()->route('today_menu', ['id' => $id]);
     }
+
+
+
+
 
 
 
@@ -102,8 +131,9 @@ class TodayMenusController extends Controller
     }
 
 
-    public function todayUpdate(Request $request, string $id)
+    public function todayUpdate(TodayMenusRequest $request, string $id)
     {
+        dd($request->all());
         $menu = Menu::findOrFail($id);
         $menu->name = $request->name;
 
@@ -171,8 +201,18 @@ class TodayMenusController extends Controller
     }
 
     //ーーーーーーーーーーーーーーーーーーーーーーー種目追加ーーーーーーーーーーーーーーーーーーーーーーーー
-    public function addExercises(Request $request) //種目追加モーダルからの送信
+    public function addExercises(TodayMenusRequest $request) //種目追加モーダルからの送信
     {
+
+        $validator = Validator::make($request->all(), [
+            'selectedExercises' => 'required|array|min:1',
+            // その他のバリデーションルール
+        ]);
+
+        if ($validator->fails() && $validator->errors()->has('selectedExercises')) {
+            session()->flash('showModal', true);
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
         // Get the request data
         $exerciseIds = $request->input('selectedExercises');
         $menuId = $request->input('menu_id');

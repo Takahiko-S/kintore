@@ -17,19 +17,17 @@
 
             @if ($menu)
                 <div class="row align-items-center mt-5">
-                    <div class="col-md-6">
+                    <div class="col-12">
                         <h1>{{ \Carbon\Carbon::now()->format('Y/m/d') }}: {{ $menu->name }}</h1>
                     </div>
 
-                    @if (
-                        $menu->menuExercises->every(function ($menuExercise) {
-                            return !$menuExercise->histories->isEmpty();
-                        }))
-                        <form action="{{ route('today_complete', ['id' => $menu->id]) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="btn btn-success">メニュー完了</button>
-                        </form>
-                    @endif
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                            data-bs-target="#confirmModal">
+                            メニュー完了
+                        </button>
+                    </div>
+
                 </div>
                 <p>{{ $menu->description }}</p>
                 <h2>Exercises</h2>
@@ -97,9 +95,30 @@
                 <h1>メニューがありません。</h1>
             @endif
         </div>
+
+        <!----------------------------------------------- Modal ----------------------------------------------------------------->
+        <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmModalLabel">確認</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        メニューを完了しますか？
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                        <form action="{{ route('today_complete', ['id' => $menu->id]) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-success">完了する</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </x-slot>
-
-
 
 
 

@@ -15,7 +15,7 @@
                     <x-nav-link :href="route('history.index')" :active="request()->routeIs('history.index')"> {{ __('Dashboard') }} </x-nav-link>
 
                     <x-nav-link :href="route('today_menu')" :active="request()->routeIs('today_menu')"> {{ __('今日の種目') }} </x-nav-link>
-                    <x-nav-link :href="route('schedule_index')" :active="request()->routeIs('schedule.index')"> {{ __('スケジュール') }}
+                    <x-nav-link :href="route('schedule_index')" :active="request()->routeIs('schedule_index')"> {{ __('スケジュール') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -84,7 +84,7 @@
 
             <x-responsive-nav-link :href="route('today_menu')" :active="request()->routeIs('today_menu')"> {{ __('今日の種目') }}
                 </x-responsive-nav-link:href>
-                <x-responsive-nav-link :href="route('schedule_index')" :active="request()->routeIs('schedule.index')"> {{ __('スケジュール') }}
+                <x-responsive-nav-link :href="route('schedule_index')" :active="request()->routeIs('schedule_index')"> {{ __('スケジュール') }}
                     </x-responsive-nav-link:href>
 
 

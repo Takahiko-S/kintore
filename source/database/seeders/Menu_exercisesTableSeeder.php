@@ -79,7 +79,7 @@ class Menu_exercisesTableSeeder extends Seeder
         MenuExercise::create([
             'menu_id' => 2,
             'exercise_id' => 8,
-            'set' => 1,
+            'set' => 2,
             'weight' => 50,
             'reps' => 10,
             'index' => 4,
@@ -88,7 +88,7 @@ class Menu_exercisesTableSeeder extends Seeder
         MenuExercise::create([
             'menu_id' => 2,
             'exercise_id' => 8,
-            'set' => 1,
+            'set' => 3,
             'weight' => 60,
             'reps' => 10,
             'index' => 5,

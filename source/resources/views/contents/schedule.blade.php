@@ -176,6 +176,7 @@
                             <div class="mb-3">
                                 <label for="menuName" class="form-label">メニュー名</label>
                                 <input type="text" class="form-control" id="menuname" name="menu_name" required>
+
                             </div>
 
                             @foreach ($exercises as $body_part => $exercises_in_body_part)

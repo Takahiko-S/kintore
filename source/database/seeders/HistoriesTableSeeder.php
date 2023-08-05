@@ -26,7 +26,6 @@ class HistoriesTableSeeder extends Seeder
         //         'weight' => 10,
         //         'reps' => 10,
         //         'memo' => 'ここにメモを記入する',
-        //         'is_completed' => 1,
         //         'created_at' => '2023-08-01 16:36:23',
         //         'updated_at' => '2023-08-01 16:36:23'
         //     ]);
@@ -44,7 +43,6 @@ class HistoriesTableSeeder extends Seeder
         //         'weight' => 10,
         //         'reps' => 10,
         //         'memo' => 'ここにメモを記入する',
-        //         'is_completed' => 1,
         //         'created_at' => '2023-08-01 16:36:23',
         //         'updated_at' => '2023-08-01 16:36:23'
         //     ]);
@@ -62,7 +60,6 @@ class HistoriesTableSeeder extends Seeder
         //         'weight' => 10,
         //         'reps' => 10,
         //         'memo' => 'ここにメモを記入する',
-        //         'is_completed' => 1,
         //         'created_at' => '2023-08-01 16:36:23',
         //         'updated_at' => '2023-08-01 16:36:23'
         //     ]);
@@ -80,7 +77,6 @@ class HistoriesTableSeeder extends Seeder
         //         'weight' => 10,
         //         'reps' => 10,
         //         'memo' => 'ここにメモを記入する',
-        //         'is_completed' => 1,
         //         'created_at' => '2023-08-01 16:36:23',
         //         'updated_at' => '2023-08-01 16:36:23'
         //     ]);

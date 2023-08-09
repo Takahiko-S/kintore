@@ -9,10 +9,12 @@
             }
 
             .calendar-cell {
-                background-color: red !inportant;
+                background-color: red !important;
                 /* 背景色を淡い青に設定 */
+            }
 
-
+            .completed-exercise {
+                background-color: rgb(220, 106, 18) !important;
             }
         </style>
     </x-slot>
@@ -26,12 +28,12 @@
                     <h1 class="text-center text-primary mb-4">{{ $year }}年{{ $month }}月</h1>
                 </div>
 
-                <div class="col-6 text-start">
+                <div class="col-6 text-start mb-2">
                     <a href="{{ route('history.index') }}?y={{ $prevYear }}&m={{ $prevMonth }}"
                         class="btn btn-secondary btn-sm" id="befor">&lt;&lt;&nbsp;前の月</a>
                 </div>
 
-                <div class="col-6 text-end">
+                <div class="col-6 text-end mb-2">
                     <a href="{{ route('history.index') }}?y={{ $nextYear }}&m={{ $nextMonth }}"
                         class="btn btn-secondary btn-sm" id="after">次の月&nbsp;&gt;&gt;</a>
                 </div>
@@ -51,7 +53,28 @@
                             @if ($index % 7 == 0)
                                 <tr>
                             @endif
-                            <td class="text-center table-strped">{{ $data['date'] }}</td>
+                            @php
+                                $isExerciseDate = in_array(['year' => $year, 'month' => $data['month'], 'day' => $data['day']], $exerciseDates);
+                                
+                            @endphp
+
+
+                            @if ($isExerciseDate)
+                                <td class="text-center table-striped completed-exercise">
+                                    <a href="{{ route('show_history', ['date' => "{$data['year']}-{$data['month']}-{$data['day']}"]) }}"
+                                        style="display: block; height: 100%; color: inherit; text-decoration: none;">
+                                        {{ $data['day'] }}
+                                    </a>
+                                </td>
+                            @else
+                                <td class="text-center table-striped">
+                                    {{ $data['day'] }}
+                                </td>
+                            @endif
+
+
+
+
                             @if ($index % 7 == 6)
                                 </tr>
                             @endif
@@ -68,7 +91,7 @@
 
 
                 <div class="col-10 mx-auto mt-5">
-                    <a href="{{ route('schedule.index') }}" class="btn btn-primary btn-lg w-100 ">筋トレスケジュール</a>
+                    <a href="{{ route('schedule_index') }}" class="btn btn-primary btn-lg w-100 ">筋トレスケジュール</a>
                 </div>
 
 

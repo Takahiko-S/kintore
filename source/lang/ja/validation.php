@@ -132,6 +132,16 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'menu_exercises.*.reps' => [
+            'required' => '回数は必ず指定してください。',
+        ],
+        'menu_exercises.*.weight' => [
+            'required' => '重量は必ず指定してください。',
+        ],
+        'new_body_part' => [
+            'max' => '新しい部位は10文字以内です。',
+        ],
+
     ],
 
     /*

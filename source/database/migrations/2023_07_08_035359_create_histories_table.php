@@ -14,14 +14,16 @@ return new class extends Migration
         Schema::create('histories', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
             $table->unsignedBigInteger('menu_id');
-            $table->foreign('menu_id')->references('id')->on('menus');
-            $table->date('exercise_date');
             $table->unsignedBigInteger('exercise_id');
-            $table->integer('sets');
-            $table->integer('weight');
-            $table->boolean('is_completed');
+            $table->unsignedBigInteger('menu_exercise_id');
+            $table->date('exercise_date');
+            $table->string('menu_name')->comment('メニュー名');
+            $table->string('exercise_name')->comment('種目名');
+            $table->integer('sets')->comment('セット数');
+            $table->integer('weight')->comment('重量');
+            $table->integer('reps')->comment('回数');
+            $table->string('memo')->comment('メモ');
             $table->timestamps();
         });
     }

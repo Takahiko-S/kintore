@@ -271,6 +271,8 @@
                             <button type="submit" class="btn btn-primary">種目追加</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
                         </form>
+
+
                     </div>
 
                 </div>
@@ -369,8 +371,10 @@
                     });
             }
 
-            //ーーーーーーーーーーーーーーーーーーーーーーーーーーーー新しい種目を追加、モーダルが自動で閉じるファンクションーーーーーーーーーーーーーーーーーーーーーーーーーー
 
+
+
+            //ーーーーーーーーーーーーーーーーーーーーーーーーーーーー新しい種目を追加、モーダルが自動で閉じるファンクションーーーーーーーーーーーーーーーーーーーーーーーーーー
             $(document).ready(function() {
                 // Get the modals
                 var newMenuModal = new bootstrap.Modal(document.getElementById('newModal'));
@@ -391,28 +395,35 @@
                         method: 'POST',
                         data: $(this).serialize(),
                         success: function(response) {
-                            // データが成功したら、新しいエクササイズモーダルを非表示にする
-                            $('#newExerciseModal').modal('hide');
+                            if (response.status === 'success') {
+                                // データが成功したら、新しいエクササイズモーダルを非表示にする
+                                $('#newExerciseModal').modal('hide');
 
-                            // URLのハッシュを設定する
-                            window.location.hash = '#newMenu';
+                                // URLのハッシュを設定する
+                                window.location.hash = '#newMenu';
 
-                            // ここでリロードします
-                            location.reload();
+                                // ここでリロードします
+                                //  location.reload();
+                            } else {
+                                // エラーメッセージを表示するためのコードがここに追加される
+                                var errorMessage = response.message || 'エラーが発生しました。';
+                                $('#body-part-error').html('<div class="alert alert-danger">' +
+                                    errorMessage + '</div>');
+                            }
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             var errors = jqXHR.responseJSON.errors;
-                            var errorMessage = jqXHR.responseJSON.message ||
-                            'エラーが発生しました。'; // 一般的なエラーメッセージ
+                            var errorMessage = "";
 
-                            // body_part_combinationやnew_body_partに関連するエラーがあれば取得
-                            if (errors) {
-                                if (errors.body_part_combination) {
-                                    errorMessage = errors.body_part_combination[0];
-                                }
-                                if (errors.new_body_part) {
-                                    errorMessage = errors.new_body_part[0];
-                                }
+                            // 他のエラーも取得可能
+                            if (errors && errors.body_part_combination) {
+                                errorMessage = errors.body_part_combination[0];
+                            }
+                            if (errors && errors.new_body_part) {
+                                errorMessage = errors.new_body_part[0];
+                            }
+                            if (!errorMessage) {
+                                errorMessage = jqXHR.responseJSON.message || 'エラーが発生しました。';
                             }
 
                             // エラーメッセージをHTMLに追加
@@ -422,15 +433,8 @@
                         }
                     });
                 });
-
-
-
-                // ページのリロードが完了したら、「新メニュー作成」のモーダルを表示する
-                // URLのハッシュに基づいて判定する
-                if (window.location.hash === '#newMenu') {
-                    $('#newModal').modal('show');
-                }
             });
+
 
 
             //ーーーーーーーーーーーーーーーーーーーーーーーーーーーーorderを取得するーーーーーーーーーーーーーーーーーーーーーーーーーー
@@ -472,5 +476,30 @@
                 var myModal = new bootstrap.Modal(document.getElementById('newModal'), {});
                 myModal.show();
             @endif
+            //--------------------------------------------------------------------------------------------------------------------
+            $('#new-exercise-form').submit(function(e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: '{{ route('add_new_exercise') }}',
+                    method: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        // データが成功したら、新しいエクササイズモーダルを非表示にする
+                        $('#newExerciseModal').modal('hide');
+
+                        // URLのハッシュを設定する
+                        window.location.hash = '#newMenu';
+
+                        // ここでリロードします
+                        location.reload();
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        var errorMessage = jqXHR.responseJSON.message || 'エラーが発生しました。';
+                        $('#exercise-error-message').text(errorMessage); // エラーメッセージを表示
+                        console.error('Error: ' + textStatus, errorThrown);
+                    }
+                });
+            });
         </script>
     </x-slot> </x-base-layout>

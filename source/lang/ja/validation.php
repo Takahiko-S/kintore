@@ -141,7 +141,9 @@ return [
         'new_body_part' => [
             'max' => '新しい部位は10文字以内です。',
         ],
-
+        'selectedExercises' => [
+            'required' => '種目を１つ以上選択してください。',
+        ],
     ],
 
     /*

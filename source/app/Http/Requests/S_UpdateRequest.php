@@ -4,9 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-use Illuminate\Contracts\Validation\Validator;
-
-class ScheduleRequest extends FormRequest
+class S_UpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -43,15 +41,5 @@ class ScheduleRequest extends FormRequest
 
 
         ];
-    }
-    public function withValidator(Validator $validator)
-    {
-        $validator->after(function ($validator) {
-            if ((!empty($this->body_part) && !empty($this->new_body_part)) ||
-                (empty($this->body_part) && empty($this->new_body_part))
-            ) {
-                $validator->errors()->add('body_part_combination', '部位は一つだけ選択するか入力してください。');
-            }
-        });
     }
 }

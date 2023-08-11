@@ -41,18 +41,7 @@ class TodayMenusController extends Controller
                 ->first();
         }
 
-        if ($menu) {
-            // Get today's date range
-            $todayStart = Carbon::today();
-            $todayEnd = Carbon::tomorrow();
 
-            // Filter the exercises that have not been completed today
-            $menu->menuExercises = $menu->menuExercises->filter(function ($menuExercise) use ($todayStart, $todayEnd) {
-                return $menuExercise->histories->whereBetween('created_at', [$todayStart, $todayEnd])->isEmpty();
-            });
-        } else {
-            Session::flash('message', 'メニューがありません。');
-        }
 
         return view('contents.today_menu', compact('menu'));
     }
@@ -62,23 +51,28 @@ class TodayMenusController extends Controller
 
 
 
+
+
     public function completeMenu(Request $request, $id)
     {
-        //dd($request->all());
         $completed_exercises = $request->input('completed_exercises');
-        if (!$completed_exercises) { // Make sure $completed_exercises is not null
-            return redirect()->route('today_menu', ['id' => $id])->with('error', 'No exercises selected.');
+        if (!$completed_exercises) {
+            return redirect()->route('today_menu', ['id' => $id])->with('error', '完了が選択されていません');
         }
 
-        // Here we need to retrieve the menu using the passed $id
         $menu = Menu::find($id);
 
         foreach ($completed_exercises as $completed_exercise) {
-
-            // For each completed exercise, we get the MenuExercise instance
             $menuExercise = MenuExercise::find($completed_exercise);
-            //dd($menuExercise);
-            // Now, we can use $menu and $menuExercise
+
+            if (is_null($menuExercise->reps)) {
+                return redirect()->route('today_menu', ['id' => $id])->with('error', '回数の情報がありません。');
+            }
+
+            if (is_null($menuExercise->weight)) {
+                return redirect()->route('today_menu', ['id' => $id])->with('error', '重量の情報がありません。');
+            }
+
             History::create([
                 'user_id' => Auth::id(),
                 'menu_id' => $menu->id,
@@ -90,11 +84,10 @@ class TodayMenusController extends Controller
                 'sets' => $menuExercise->set,
                 'weight' => $menuExercise->weight,
                 'reps' => $menuExercise->reps,
-                'memo' => '', // Update this based on your requirements
+                'memo' => '',
             ]);
         }
 
-        // Redirect to the current menu page
         return redirect()->route('today_menu', ['id' => $id]);
     }
 
@@ -145,7 +138,7 @@ class TodayMenusController extends Controller
 
     public function todayUpdate(TodayMenusRequest $request, string $id)
     {
-        dd($request->all());
+
         $menu = Menu::findOrFail($id);
         $menu->name = $request->name;
 
@@ -213,25 +206,35 @@ class TodayMenusController extends Controller
     }
 
     //ーーーーーーーーーーーーーーーーーーーーーーー種目追加ーーーーーーーーーーーーーーーーーーーーーーーー
-    public function addExercises(TodayMenusRequest $request) //種目追加モーダルからの送信
+    public function addExercises(TodayMenusRequest $request) // 種目追加モーダルからの送信
     {
+        $menuId = $request->input('menu_id');
+        $menu = Menu::find($menuId);
+        $existingExerciseIds = $menu->exercises->pluck('id')->toArray();
 
         $validator = Validator::make($request->all(), [
-            'selectedExercises' => 'required|array|min:1',
+            'selectedExercises' => [
+                'required',
+                'array',
+                'min:1',
+                function ($attribute, $value, $fail) use ($existingExerciseIds) {
+                    if (array_intersect($value, $existingExerciseIds)) {
+                        $fail('既にメニューに登録されている種目が選択されています。');
+                    }
+                },
+            ],
             // その他のバリデーションルール
         ]);
 
-        if ($validator->fails() && $validator->errors()->has('selectedExercises')) {
+        if ($validator->fails()) {
             session()->flash('showModal', true);
             return redirect()->back()->withErrors($validator)->withInput();
         }
+
         // Get the request data
         $exerciseIds = $request->input('selectedExercises');
-        $menuId = $request->input('menu_id');
-
-        // Retrieve the specific Menu
-        $menu = Menu::find($menuId);
         $currentExercisesCount = $menu->exercises()->count();
+
         // Save the data
         foreach ($exerciseIds as $exerciseId) {
             $menu->exercises()->attach($exerciseId, ['set' => 1, 'index' => $currentExercisesCount]);

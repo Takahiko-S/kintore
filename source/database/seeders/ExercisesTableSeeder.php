@@ -1,4 +1,5 @@
 <?php
+
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -16,18 +17,29 @@ class ExercisesTableSeeder extends Seeder
     {
         $init_exercises = [
             ['name' => 'ベンチプレス', 'body_part' => '胸'],
-            ['name' => 'デッドリフト', 'body_part' => '背中'],
-            ['name' => 'スクワット', 'body_part' => '脚'],
-            ['name' => 'ショルダープレス', 'body_part' => '肩'],
-            ['name' => 'バーベルカール', 'body_part' => '上腕二頭筋'],
-            ['name' => 'トライセップスエクステンション', 'body_part' => '上腕三頭筋'],
-            ['name' => 'レッグプレス', 'body_part' => '脚'],
-            ['name' => 'プルアップ', 'body_part' => '背中'],
             ['name' => 'ダンベルフライ', 'body_part' => '胸'],
+            ['name' => 'インクラインベンチプレス', 'body_part' => '胸'], // 追加
+
+            ['name' => 'バーベルカール', 'body_part' => '腕'],
+            ['name' => 'インクラインアームカール', 'body_part' => '腕'],
+            ['name' => 'インクラインハンマーカール', 'body_part' => '腕'], // 追加
+
+            ['name' => 'デッドリフト', 'body_part' => '背中'],
+            ['name' => 'ラットプルダウン', 'body_part' => '背中'], // 追加
+            ['name' => 'チンニング', 'body_part' => '背中'],
+
+            ['name' => 'スクワット', 'body_part' => '脚'],
+            ['name' => 'レッグエクステンション', 'body_part' => '脚'], // 追加
+            ['name' => 'レッグカール', 'body_part' => '脚'], // 追加
+            ['name' => 'レッグプレス', 'body_part' => '脚'],
+            ['name' => 'ブルガリンスクワット', 'body_part' => '脚'], // 追加
+
+            ['name' => 'キューバンプレス', 'body_part' => '肩'],
             ['name' => 'サイドレイズ', 'body_part' => '肩'],
-            // その他、必要な種目を追加
+            ['name' => 'ダンベルレイズ', 'body_part' => '肩'], // 追加
+            ['name' => 'ショルダープレス', 'body_part' => '肩'],
         ];
-        
+
         foreach ($init_exercises as $exercise) {
             $data = new Exercises();
             $data->name = $exercise['name'];

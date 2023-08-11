@@ -24,8 +24,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/index', [HistoryController::class, 'index'])->name('history.index');
     Route::get('/show_history{date}', [HistoryController::class, 'showHistory'])->name('show_history');
 
-
-
     Route::get('/today_menu', [TodayMenusController::class, 'todayMenu'])->name('today_menu');
     Route::get('/today_edit/{id}', [TodayMenusController::class, 'todayEdit'])->name('today_edit');
     Route::patch('/today_update/{id}', [TodayMenusController::class, 'todayUpdate'])->name('today_update');
@@ -37,7 +35,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/schedule', [ScheduleController::class, 'schedule_index'])->name('schedule_index');
     Route::get('/schedule/{id}/edit', [ScheduleController::class, 'schedule_edit'])->name('schedule.edit');
-    Route::patch('/schedule/{id}', [ScheduleController::class, 'scheduleUpdate'])->name('schedule_update');
+    Route::post('/schedule_update/{id}', [ScheduleController::class, 'scheduleUpdate'])->name('schedule_update');
     Route::post('/menu_delete', [ScheduleController::class, 'menuDelete'])->name('menu_delete');
     Route::get('/new_schedule', [ScheduleController::class, 'newSchedule'])->name('new_schedule');
     Route::post('/add_menu', [ScheduleController::class, 'addMenu'])->name('add_menu');

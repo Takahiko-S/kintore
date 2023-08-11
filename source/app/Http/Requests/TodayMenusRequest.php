@@ -29,4 +29,13 @@ class TodayMenusRequest extends FormRequest
 
         ];
     }
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'メニュー名を入力してください。',
+            'menu_exercises.*.weight.between' => '重量は1から1000の間である必要があります。',
+            'menu_exercises.*.reps.between' => '回数は1から1000の間である必要があります。',
+            // その他のカスタムエラーメッセージ...
+        ];
+    }
 }

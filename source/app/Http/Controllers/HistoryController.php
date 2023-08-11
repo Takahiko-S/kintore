@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\History;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -134,7 +135,8 @@ class HistoryController extends Controller
         $history = DB::table('histories')
             ->where('exercise_date', $date)
             ->get();
+        $menu_name = History::where('exercise_date', $date)->first()->menu_name;
         //dd($history);
-        return view('contents.history', compact('history', 'date'));
+        return view('contents.history', compact('history', 'date', 'menu_name'));
     }
 }

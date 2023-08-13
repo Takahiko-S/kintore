@@ -402,18 +402,17 @@
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             var errors = jqXHR.responseJSON.errors;
+                            var errorMessage = jqXHR.responseJSON.message ||
+                            'エラーが発生しました。'; // 一般的なエラーメッセージ
 
-                            // 特定のエラーメッセージを取得
-                            var errorMessage = "";
-
-                            if (errors.body_part_combination) {
-                                errorMessage = errors.body_part_combination[0];
-                            }
-
-                            // 他のエラーも取得可能
-                            // 例: new_body_partに関連するエラーを取得
-                            if (errors.new_body_part) {
-                                errorMessage = errors.new_body_part[0];
+                            // body_part_combinationやnew_body_partに関連するエラーがあれば取得
+                            if (errors) {
+                                if (errors.body_part_combination) {
+                                    errorMessage = errors.body_part_combination[0];
+                                }
+                                if (errors.new_body_part) {
+                                    errorMessage = errors.new_body_part[0];
+                                }
                             }
 
                             // エラーメッセージをHTMLに追加
@@ -423,6 +422,7 @@
                         }
                     });
                 });
+
 
 
                 // ページのリロードが完了したら、「新メニュー作成」のモーダルを表示する

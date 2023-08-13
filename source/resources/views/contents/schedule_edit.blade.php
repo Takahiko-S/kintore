@@ -12,151 +12,14 @@
 
     <x-slot name="main">
         <div class="container">
-
-            <h1 class="text-center mt-5">スケジュールメニュー編集</h1>
-
-
-            <form action="{{ route('schedule_update', ['id' => $menu->id]) }}" method="POST">
-                @csrf
-                @method('PATCH')
-
-                <div class="row mt-2">
-                    <!-- Button trigger modal -->
-                    <div class="col-12 mt-3">
-                        <div class="row">
-                            <div class="col-6">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal" id="modal_bt">
-                                    種目追加
-                                </button>
-                            </div>
-
-                            <div class="col-6 text-end">
-                                <button type="submit" class="btn btn-primary">更新</button>
-                            </div>
-                        </div>
-
-                    </div>
-
-                </div>
+            @if ($menu)
+                <h1 class="text-center mt-5">スケジュールメニュー編集</h1>
 
 
-                <div class="col-12 mt-3">
-                    @error('name')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                    @enderror
-                    @if ($menu->menuExercises->isEmpty())
-                        <div class="col-md-6 mt-3">
-                            <h4>メニュー名</h4>
-                            <input type="text" name="name" value="{{ $menu->name }}" class="form-control">
-                        </div>
-
-                        <h4 class="text-center mt-5">種目が登録されていません。</h4>
-                    @else
-                        <h4>メニュー名</h4>
-                        <input type="text" name="name" value="{{ $menu->name }}" class="form-control">
-                    @endif
-                </div>
-
-                <!-- メニュー編集部分 -->
-                @php
-                    $globalIndex = 0;
-                @endphp
-                @foreach ($menu->menuExercises->groupBy('exercise_id') as $exerciseId => $menuExercisesForExercise)
-                    <div class="exercise-block" data-exercise-id="{{ $exerciseId }}">
-                        <!-- 種目を囲むdiv -->
+                <form action="{{ route('schedule_update', ['id' => $menu->id]) }}" method="POST">
+                    @csrf
 
 
-
-
-                        <h3 class="text-start mt-3">{{ $menuExercisesForExercise->first()->exercise->name }}</h3>
-
-                        <div class="form-group">
-                            <table class="table table-bordered">
-                                <!-- ラベル部分 -->
-                                <thead>
-                                    <tr>
-                                        <th class="col-1 col-md-1 text-center" style="font-size: 0.8em;">セット</th>
-                                        <th class="col-1 col-md-1 text-center">回数</th>
-                                        <th class="col-1 col-md-1 text-center">重量 (kg)</th>
-                                    </tr>
-                                </thead>
-                                <!-- データ部分 -->
-                                <tbody>
-                                    @php
-                                        $setIndex = 0;
-                                    @endphp
-                                    @foreach ($menuExercisesForExercise as $menuExercise)
-                                        @error('menu_exercises.' . $globalIndex . '.weight')
-                                            <div class="alert alert-danger">{{ $message }}</div>
-                                        @enderror
-                                        @error('menu_exercises.' . $globalIndex . '.reps')
-                                            <div class="alert alert-danger">{{ $message }}</div>
-                                        @enderror
-                                        <tr class="menu-row text-center">
-                                            <input type="hidden" name="menu_exercises[{{ $globalIndex }}][id]"
-                                                value="{{ $menuExercise->id }}">
-                                            <input type="hidden"
-                                                name="menu_exercises[{{ $globalIndex }}][exercise_id]"
-                                                value="{{ $menuExercise->exercise->id }}">
-                                            <td>
-                                                <span class="set-number">{{ $menuExercise->set }}</span>
-                                                <input type="hidden" name="menu_exercises[{{ $globalIndex }}][set]"
-                                                    value="{{ $menuExercise->set }}" class="set-number">
-                                            </td>
-
-                                            <td>
-                                                <input type="number" name="menu_exercises[{{ $globalIndex }}][reps]"
-                                                    value="{{ $menuExercise->reps }}" class="form-control text-center">
-                                                <!-- 回数 -->
-                                            </td>
-                                            <td>
-                                                <input type="number"
-                                                    name="menu_exercises[{{ $globalIndex }}][weight]"
-                                                    value="{{ $menuExercise->weight }}"
-                                                    class="form-control text-center">
-                                                <!-- 重量 -->
-                                            </td>
-
-                                        </tr>
-
-                                        @if ($setIndex == 0)
-                                            <!-- メモを行の新たなセルに追加 -->
-                                            <div class="col-12">
-                                                <label for="memo">メモ:</label>
-                                                <textarea class="form-control" rows="2" name="menu_exercises[{{ $globalIndex }}][memo]" rows="3">{{ $menuExercise->memo }}</textarea>
-                                            </div>
-                                            @php
-                                                $setIndex++;
-                                            @endphp
-                                        @endif
-                                        @php
-                                            $globalIndex++;
-                                        @endphp
-                                    @endforeach
-
-                                </tbody>
-                            </table>
-                        </div>
-
-
-                        <div class="text-center mt-3 row">
-                            <div class="col-6">
-                                <button type="button" class="btn btn-primary w-75 add-menu"
-                                    data-exercise-id="{{ $exerciseId }}">セット追加</button>
-                            </div>
-                            <div class="col-6">
-                                <button type="button" class="btn btn-danger w-75 delete-button"
-                                    data-id="{{ $menuExercise->id }}">
-                                    <i class="fas fa-times-circle"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-
-
-                @if (!$menu->menuExercises->isEmpty())
                     <div class="row mt-2">
                         <!-- Button trigger modal -->
                         <div class="col-12 mt-3">
@@ -174,13 +37,164 @@
                             </div>
 
                         </div>
+
                     </div>
-                @endif
 
 
-            </form>
+                    <div class="col-12 mt-3">
+                        @error('name')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                        @if ($menu->menuExercises->isEmpty())
+                            <div class="col-md-6 mt-3">
+                                <h4>メニュー名</h4>
+                                <input type="text" name="name" value="{{ $menu->name }}" class="form-control">
+                            </div>
+
+                            <h4 class="text-center mt-5">種目が登録されていません。</h4>
+                        @else
+                            <h4>メニュー名</h4>
+                            <input type="text" name="name" value="{{ $menu->name }}" class="form-control">
+                        @endif
+                    </div>
+
+                    <!-- メニュー編集部分 -->
+                    @php
+                        $globalIndex = 0;
+                    @endphp
+                    @foreach ($menu->menuExercises->groupBy('exercise_id') as $exerciseId => $menuExercisesForExercise)
+                        <div class="exercise-block" data-exercise-id="{{ $exerciseId }}">
+                            <!-- 種目を囲むdiv -->
 
 
+
+
+                            <h3 class="text-start mt-3">{{ $menuExercisesForExercise->first()->exercise->name }}</h3>
+
+                            <div class="form-group">
+                                <table class="table table-bordered">
+                                    <!-- ラベル部分 -->
+                                    <thead>
+                                        <tr>
+                                            <th class="col-1 col-md-1 text-center" style="font-size: 0.8em;">セット</th>
+                                            <th class="col-1 col-md-1 text-center">回数</th>
+                                            <th class="col-1 col-md-1 text-center">重量 (kg)</th>
+                                        </tr>
+                                    </thead>
+                                    <!-- データ部分 -->
+                                    <tbody>
+                                        @if ($errors->any())
+                                            <div class="alert alert-danger">
+                                                <ul>
+                                                    @foreach ($errors->all() as $error)
+                                                        <li>{{ $error }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        @endif
+
+                                        @php
+                                            $setIndex = 0;
+                                        @endphp
+                                        @foreach ($menuExercisesForExercise as $menuExercise)
+                                            @error('menu_exercises.' . $globalIndex . '.weight')
+                                                <div class="alert alert-danger">{{ $message }}</div>
+                                            @enderror
+                                            @error('menu_exercises.' . $globalIndex . '.reps')
+                                                <div class="alert alert-danger">{{ $message }}</div>
+                                            @enderror
+                                            <tr class="menu-row text-center">
+                                                <input type="hidden" name="menu_exercises[{{ $globalIndex }}][id]"
+                                                    value="{{ $menuExercise->id }}">
+                                                <input type="hidden"
+                                                    name="menu_exercises[{{ $globalIndex }}][exercise_id]"
+                                                    value="{{ $menuExercise->exercise->id }}">
+                                                <td>
+                                                    <span class="set-number">{{ $menuExercise->set }}</span>
+                                                    <input type="hidden"
+                                                        name="menu_exercises[{{ $globalIndex }}][set]"
+                                                        value="{{ $menuExercise->set }}" class="set-number">
+                                                </td>
+
+                                                <td>
+                                                    <input type="number"
+                                                        name="menu_exercises[{{ $globalIndex }}][reps]"
+                                                        value="{{ $menuExercise->reps }}"
+                                                        class="form-control text-center">
+                                                    <!-- 回数 -->
+                                                </td>
+                                                <td>
+                                                    <input type="number"
+                                                        name="menu_exercises[{{ $globalIndex }}][weight]"
+                                                        value="{{ $menuExercise->weight }}"
+                                                        class="form-control text-center">
+                                                    <!-- 重量 -->
+                                                </td>
+
+                                            </tr>
+
+                                            @if ($setIndex == 0)
+                                                <!-- メモを行の新たなセルに追加 -->
+                                                <div class="col-12">
+                                                    <label for="memo">メモ:</label>
+                                                    <textarea class="form-control" rows="2" name="menu_exercises[{{ $globalIndex }}][memo]" rows="3">{{ $menuExercise->memo }}</textarea>
+                                                </div>
+                                                @php
+                                                    $setIndex++;
+                                                @endphp
+                                            @endif
+                                            @php
+                                                $globalIndex++;
+                                            @endphp
+                                        @endforeach
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+                            <div class="text-center mt-3 row">
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-primary w-75 add-menu"
+                                        data-exercise-id="{{ $exerciseId }}">セット追加</button>
+                                </div>
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-danger w-75 delete-button"
+                                        data-id="{{ $menuExercise->id }}">
+                                        <i class="fas fa-times-circle"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+
+
+                    @if (!$menu->menuExercises->isEmpty())
+                        <div class="row mt-2">
+                            <!-- Button trigger modal -->
+                            <div class="col-12 mt-3">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#exampleModal" id="modal_bt">
+                                            種目追加
+                                        </button>
+                                    </div>
+
+                                    <div class="col-6 text-end">
+                                        <button type="submit" class="btn btn-primary">更新</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    @endif
+
+
+                </form>
+            @else
+                <h1 class="text-center mt-5">メニューがありません。</h1>
+            @endif
 
 
 
@@ -194,7 +208,8 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">追加種目選択</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </div>
                     @error('selectedExercises')
                         <div id="selectedExercises-error" class="alert alert-danger">{{ $message }}</div>

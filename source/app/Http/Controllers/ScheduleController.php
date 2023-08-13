@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\S_UpdateRequest;
 use App\Http\Requests\ScheduleRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Menu;
 use App\Models\Exercises;
 use App\Models\MenuExercise;
-use Database\Seeders\MenusTableSeeder;
 use Illuminate\Support\Facades\Validator;
 
 class ScheduleController extends Controller
@@ -28,8 +28,9 @@ class ScheduleController extends Controller
     }
 
     //--------------------------------------------//セット追加などの更新---------------------------------------
-    public function scheduleUpdate(ScheduleRequest $request, string $id)
+    public function scheduleUpdate(S_UpdateRequest $request, string $id)
     {
+
         $menu = Menu::findOrFail($id);
         $menu->name = $request->name;
 
@@ -150,8 +151,6 @@ class ScheduleController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'selectedExercises' => 'required|array|min:1',
-        ], [], [
-            'selectedExercises' => '選択されたエクササイズ',
         ]);
 
         if ($validator->fails()) {
@@ -171,13 +170,21 @@ class ScheduleController extends Controller
         }
 
         // Redirect to the menu detail page
-        return redirect()->route('today_edit', ['id' => $menu->id]);
+        return redirect()->route('schedule.edit', ['id' => $menu->id]);
     }
     //-------------------------------------------------------新規種目追加-------------------------------------------------------------------------
     public function addNewExercise(ScheduleRequest $request)
 
     {
 
+        // すでに存在する名前かどうかをチェック
+        $existingExercise = Exercises::where('name', $request->exercise_name)->first();
+        if ($existingExercise) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'この名前の種目はすでに登録されています。'
+            ], 400); // 400 Bad Requestを返す
+        }
         //exerciseテーブルにデータを保存
         $exercise = new Exercises();
         $exercise->name = $request->exercise_name;

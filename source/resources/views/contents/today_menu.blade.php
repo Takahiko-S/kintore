@@ -17,20 +17,28 @@
 
             @if ($menu)
                 <div class="row align-items-center mt-5">
-                    <div class="col-12">
-                        <h1>{{ \Carbon\Carbon::now()->format('Y/m/d') }}: {{ $menu->name }}</h1>
+                    <div class="col-12 text-center">
+                        <h1>今日の種目：{{ \Carbon\Carbon::now()->format('Y/m/d') }}</h1>
                     </div>
 
-                    <div class="col-md-3">
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                    <div class="col-md-12 mt-5">
+                        <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal"
                             data-bs-target="#confirmModal">
                             メニュー完了
                         </button>
                     </div>
+                    <div class="col-12">
+                        <h2>メニュー名：{{ $menu->name }}</h2>
+                    </div>
 
+
+                    <div class="col-12">
+                        <h3 class="mb-3">説明</h3>
+                        <p>{{ $menu->description }}</p>
+                    </div>
                 </div>
-                <p>{{ $menu->description }}</p>
-                <h2>Exercises</h2>
+
+
                 @if (session('error'))
                     <div class="alert alert-danger">
                         {{ session('error') }}
@@ -41,8 +49,11 @@
                     @csrf
                     @foreach ($menu->menuExercises->groupBy('exercise_id') as $exerciseId => $menuExercisesForExercise)
                         @php
-                            $allSetsCompleted = $menuExercisesForExercise->every(function ($menuExercise) {
-                                return !$menuExercise->histories->isEmpty();
+                            $todayStart = \Carbon\Carbon::today();
+                            $todayEnd = \Carbon\Carbon::tomorrow();
+                            
+                            $allSetsCompleted = $menuExercisesForExercise->every(function ($menuExercise) use ($todayStart) {
+                                return $menuExercise->histories->where('exercise_date', $todayStart->format('Y-m-d'))->isNotEmpty();
                             });
                         @endphp
                         <div style="background-color: {{ $loop->iteration % 2 == 0 ? '#f8f9fa' : '#e9ecef' }};">
@@ -55,44 +66,56 @@
                                 </div>
 
                                 <div class="col-md-12 text-end">
-                                    @csrf
                                     <table class="table">
                                         <thead>
                                             <tr class="text-center">
                                                 <th scope="col">セット</th>
-                                                <th scope="col">Reps</th>
-                                                <th scope="col">Weight (kg)</th>
+                                                <th scope="col">回数</th>
+                                                <th scope="col">重量 (kg)</th>
                                                 <th scope="col">完了</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            @foreach ($menuExercisesForExercise as $menuExercise)
-                                                @if ($menuExercise->histories->isEmpty())
-                                                    <tr class="text-center">
-                                                        <th scope="row">{{ $menuExercise->set }}</th>
-                                                        <td>{{ $menuExercise->reps }}</td>
-                                                        <td>{{ $menuExercise->weight }}</td>
-                                                        <td><input type="checkbox" name="completed_exercises[]"
-                                                                value="{{ $menuExercise->id }}"></td>
-                                                    </tr>
-                                                @endif
-                                            @endforeach
-                                        </tbody>
+                                        @foreach ($menuExercisesForExercise as $menuExercise)
+                                            @php
+                                                $isHistoryEmptyForToday = $menuExercise->histories->whereBetween('created_at', [$todayStart, $todayEnd])->isEmpty();
+                                            @endphp
+                                            @if ($isHistoryEmptyForToday)
+                                                <tr class="text-center">
+                                                    <th scope="row">{{ $menuExercise->set }}</th>
+                                                    <td>
+                                                        @if ($menuExercise->reps)
+                                                            {{ $menuExercise->reps }}
+                                                        @else
+                                                            <div class="alert alert-danger">Repsの情報がありません。</div>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if ($menuExercise->weight)
+                                                            {{ $menuExercise->weight }}
+                                                        @else
+                                                            <div class="alert alert-danger">Weightの情報がありません。</div>
+                                                        @endif
+                                                    </td>
+                                                    <td><input type="checkbox" name="completed_exercises[]"
+                                                            value="{{ $menuExercise->id }}"></td>
+                                                </tr>
+                                            @endif
+                                        @endforeach
                                     </table>
                                 </div>
                             </div>
                         </div>
                     @endforeach
-
                 </form>
+
 
 
                 <div class="col-10 mx-auto mt-5 ">
                     <a href="{{ route('today_edit', ['id' => $menu->id]) }}"
-                        class="btn btn-primary btn-lg w-100">種目の変更</a>
+                        class="btn btn-primary btn-lg w-100">種目の編集</a>
                 </div>
             @else
-                <h1>メニューがありません。</h1>
+                <h1 class="text-center mt-5">メニューがありません。</h1>
             @endif
         </div>
 
@@ -109,10 +132,14 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
-                        <form action="{{ route('today_complete', ['id' => $menu->id]) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="btn btn-success">完了する</button>
-                        </form>
+                        @if ($menu)
+                            <form action="{{ route('today_complete', ['id' => $menu->id]) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-success">完了する</button>
+                            </form>
+                        @else
+                            <p>メニューがありません。</p>
+                        @endif
                     </div>
                 </div>
             </div>
